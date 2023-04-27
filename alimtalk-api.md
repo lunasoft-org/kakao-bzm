@@ -886,8 +886,8 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 ### 7.2 테스트 선결 조건
 + 테스트할 서버 IP 정보를 루나소프트 운영 담당자에게 전달하여 테스트 서버 ACL(Access Control List)에 등록한 후 테스트 서버에 접속할 수 있습니다.
 + 테스트 카카오톡 채널은 비즈니스 인증이 완료된 채널을 개발서버에 직접 등록하여 발송 가능합니다.
-+ 테스트 템플릿은 개발서버에 직접 등록하여 [직접 승인](https://github.com/lunasoft-org/kakao-bzm-center/blob/main/center-api.md#381-%EC%8A%B9%EC%9D%B8-%ED%85%8C%EC%8A%A4%ED%8A%B8%EC%9A%A9) 후 발송 가능합니다.
-+ 테스트 수신자는 허브파트너의 관리자에 포함되어 있거나, [일회성 인증](https://github.com/lunasoft-org/kakao-bzm-center/blob/main/center-api.md#5-%EA%B0%9C%EB%B0%9C-%EC%84%9C%EB%B2%84-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%82%AC%EC%9A%A9%EC%9E%90-%EC%9D%B8%EC%A6%9D)을 받은 사용자만 가능합니다.
++ 테스트 템플릿은 개발서버에 직접 등록하여 [직접 승인](https://github.com/lunasoft-org/kakao-bzm/blob/main/center-api.md#381-%EC%8A%B9%EC%9D%B8-%ED%85%8C%EC%8A%A4%ED%8A%B8%EC%9A%A9) 후 발송 가능합니다.
++ 테스트 수신자는 허브파트너의 관리자에 포함되어 있거나, [일회성 인증](https://github.com/lunasoft-org/kakao-bzm/blob/main/center-api.md#5-%EA%B0%9C%EB%B0%9C-%EC%84%9C%EB%B2%84-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%82%AC%EC%9A%A9%EC%9E%90-%EC%9D%B8%EC%A6%9D)을 받은 사용자만 가능합니다.
 + 테스트 수신자는 테스트를 위한 카카오톡 채널을 추가해야 합니다.
 + 하루에 발송 가능한 테스트 발송량은 허브파트너당 발송 성공 기준 알림톡 500건입니다.
 + 테스트 발송 시 메시지 내 텍스트 영역에 자동으로 [테스트발송] 말머리를 포함하여 발송되므로, 메시지 총 글자수가 1000자 이상일 경우 텍스트가 잘릴 수 있습니다. 최대 글자수에서 약 10글자 내외 여유를 두고 작성하시어 테스트 부탁 드립니다.
