@@ -352,8 +352,8 @@ curl -X POST \
 | templateEmphasizeType | text | Y   | 템플릿 강조 유형<br/>(NONE: 선택안함, TEXT: 강조표기형, IMAGE: 이미지형, ITEM_LIST: 아이템리스트형)<br/>- TEXT: templateTitle, templateSubtitle 필드 필수<br/>- ITEM_LIST: templateItem.list, (templateImage(Name, Url), templateHeader, templateItemHighlight 필드 중 1개 이상 필수, templateItem.summary 필드는 templateItem.list  사용시에만 사용 가능 (2022-08-30 이후이며 그 전까지 list 필수)<br>-IMAGE: templateImageName, templateImageUrl 필드 필수 |
 | templateContent | text       | Y   | 템플릿 내용 |
 | templateExtra   | text       | N   | 부가 정보(템플릿 검수 가이드 참고) |
-| templateImageName | text     | N   | 템플릿 이미지 파일명 (템플릿 검수 가이드 참고, [업로드 API](https://github.com/lunasoft-org/test-kakao-bzm-center/blob/main/upload-api.md#22-알림톡-템플릿-등록용-이미지-업로드-요청) 참고) |
-| templateImageUrl | text      | N   | 템플릿 이미지 링크 (템플릿 검수 가이드 참고, [업로드 API](https://github.com/lunasoft-org/test-kakao-bzm-center/blob/main/upload-api.md#22-알림톡-템플릿-등록용-이미지-업로드-요청)) 참고) |
+| templateImageName | text     | N   | 템플릿 이미지 파일명 (템플릿 검수 가이드 참고, [업로드 API](https://github.com/lunasoft-org/kakao-bzm/blob/main/upload-api.md#22-알림톡-템플릿-등록용-이미지-업로드-요청) 참고) |
+| templateImageUrl | text      | N   | 템플릿 이미지 링크 (템플릿 검수 가이드 참고, [업로드 API](https://github.com/lunasoft-org/kakao-bzm/blob/main/upload-api.md#22-알림톡-템플릿-등록용-이미지-업로드-요청)) 참고) |
 | templateTitle   | text       | N   | 템플릿 내용 중 강조 표기할 핵심 정보 (템플릿 검수 가이드 참고) |
 | templateSubtitle | text      | N   | 강조 표기 보조 문구 (템플릿 검수 가이드 참고) |
 | templateHeader  | text(16))  | N   | 헤더 (템플릿 검수 가이드 참고) |
@@ -371,7 +371,7 @@ curl -X POST \
 | templateItemHighlight |  | object    |     | 아이템 하이라이트 (템플릿 검수 가이드 참고) |
 |            | title       | text(30)  | Y   | 타이틀 (썸네일 이미지가 있을 땐 21자) |
 |            | description | text(19)  | Y   | 디스크립션 (썸네일 이미지가 있을 땐 13자) |
-|            | imageUrl    | text(500) | N   | 썸네일 이미지 주소 ([업로드 API](https://github.com/lunasoft-org/test-kakao-bzm-center/blob/main/upload-api.md#23-알림톡-이미지-업로드-요청) 참고) |
+|            | imageUrl    | text(500) | N   | 썸네일 이미지 주소 ([업로드 API](https://github.com/lunasoft-org/kakao-bzm/blob/main/upload-api.md#23-알림톡-이미지-업로드-요청) 참고) |
 
 ##### 3.1.1.2 templateItem 상세 요청 파라미터
 | 키      | -   | -   | 타입       | 필수 | 설명 |
@@ -821,8 +821,8 @@ https://test-bizcenter.lunasoft.co.kr/api/v2/alimtalk/template/create
 | newTemplateEmphasizeType | text| Y   | 템플릿 강조 유형<br/>(NONE: 선택안함, TEXT: 강조표기형, IMAGE: 이미지형, ITEM_LIST: 아이템리스트형)<br/>- TEXT: newTemplateTitle, newTemplateSubtitle 필드 필수<br/>- ITEM_LIST: newTemplateItem.list, (newTemplateImage(Name, Url), newTemplateHeader, newTemplateItemHighlight 필드 중 1개 이상 필수, newTemplateItem.summary 필드는 newTemplateItem.list  사용시에만 사용 가능 사용 가능 (2022-08-30 이후이며 그 전까지 list 필수)<br>-IMAGE: newTemplateImageName, newTemplateImageUrl 필드 필수 |
 | newTemplateContent | text      | Y   | 템플릿 내용 |
 | newTemplateExtra   | text      | N   | 부가 정보(템플릿 검수 가이드 참고) |
-| newTemplateImageName | text    | N   | 템플릿 이미지 파일명 (템플릿 검수 가이드 참고, [업로드 API](https://github.com/lunasoft-org/test-kakao-bzm-center/blob/main/upload-api.md#22-알림톡-템플릿-등록용-이미지-업로드-요청) 참고) |
-| newTemplateImageUrl | text     | N   | 템플릿 이미지 링크 (템플릿 검수 가이드 참고, [업로드 API](https://github.com/lunasoft-org/test-kakao-bzm-center/blob/main/upload-api.md#22-알림톡-템플릿-등록용-이미지-업로드-요청) 참고) |
+| newTemplateImageName | text    | N   | 템플릿 이미지 파일명 (템플릿 검수 가이드 참고, [업로드 API](https://github.com/lunasoft-org/kakao-bzm/blob/main/upload-api.md#22-알림톡-템플릿-등록용-이미지-업로드-요청) 참고) |
+| newTemplateImageUrl | text     | N   | 템플릿 이미지 링크 (템플릿 검수 가이드 참고, [업로드 API](https://github.com/lunasoft-org/kakao-bzm/blob/main/upload-api.md#22-알림톡-템플릿-등록용-이미지-업로드-요청) 참고) |
 | newTemplateTitle   | text      | N   | 템플릿 내용 중 강조 표기할 핵심 정보 (템플릿 검수 가이드 참고) |
 | newTemplateSubtitle | text     | N   | 강조 표기 보조 문구 (템플릿 검수 가이드 참고) |
 | newTemplateHeader  | text(16)  | N   | 헤더 (템플릿 검수 가이드 참고) |
