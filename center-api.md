@@ -391,10 +391,10 @@ curl -X POST \
 |  | name     | text(14)  | Y | 버튼명 (단, AC인 경우 제외) |
 |  | linkType | text(2)   | Y | 버튼 타입 아래 **button 타입별 속성**에서 확인 가능 |
 |  | ordering | number    | N | 버튼 노출 순서
-|  | linkMo   | text(500) | - | mobile android 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
-|  | linkPc   | text(500) | - | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
-|  | linkAnd  | text(500) | - | pc 환경에서 버튼 클릭 시 이동할 url |
-|  | linkIos  | text(500) | - | mobile 환경에서 버튼 클릭 시 이동할 url |
+|  | linkMo  | text(500) | - | mobile 환경에서 버튼 클릭 시 이동할 url |
+|  | linkPc  | text(500) | - | pc 환경에서 버튼 클릭 시 이동할 url |
+|  | linkAnd   | text(500) | - | mobile android 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
+|  | linkIos   | text(500) | - | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
 |  | pluginId | text(24)  | - | 플러그인 ID |
 |  | bizFormId | number  | - | 비즈니스폼 ID |
 + 템플릿 메시지 타입이 채널 추가형 (AD), 복합형 (MI)인 경우 채널 추가(AC) 버튼이 필수이며 첫번째로 위치해야 한다.
