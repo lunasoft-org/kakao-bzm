@@ -5,8 +5,9 @@
 3. [선결 조건](#3-선결-조건)
 4. [API 스펙](#4-API-스펙)
 5. [발송 타입 별 Example](#5-발송-타입-별-example)
-6. [코드 정의](#6-코드-정의)
-7. [테스트-방법](#7-테스트-방법)
+6. [WebHook](#6-WebHook)
+7. [코드 정의](#7-코드-정의)
+8. [테스트-방법](#8-테스트-방법)
 
 ## 참고 : 변경사항
 
@@ -83,10 +84,10 @@
 
 | 키 | 타입 | 필수 | 설명 | 예제 |
 | --------  | --------  | --------  | --------  | --------  |
-| code | text(4) | Y | 처리 결과 코드<br/>(0000은 정상 / 나머지는 오류) | "code ":"0000" **[<6.1 오류코드 에서 확인 가능>](#61-오류-코드)**|
+| code | text(4) | Y | 처리 결과 코드<br/>(0000은 정상 / 나머지는 오류) | "code ":"0000" **[<7.1 오류코드 에서 확인 가능>](#71-오류-코드)**|
 | message | text | N | 오류 메시지<br/>(오류시 존재하는 값) | "message ":"NoSendAvailableTimeException(1)" |
 
-##### [Example] (※ 테스트 하기 전에 6.1 테스트 선결 조건을 먼저 확인하세요.)
+##### [Example] (※ 테스트 하기 전에 8.1 테스트 선결 조건을 먼저 확인하세요.)
 
 ```
 $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"message_type":"FT","message_key":"00005","sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62","country_code":"82","recipient_number":"01012345678","message":"(광고)채널 추가 없이 보내는 정보형 메시지 \"카카오톡 비즈메시지\"를 소개합니다.","attachment":{"button":[{"name":"비즈메시지 소개","type":"WL","url_pc":"http://bizmessage.kakao.com/", "url_mobile":"http://bizmessage.kakao.com/"}]}}' https://cbt-ext-bzm-api.kakao.com/v3/d856a846049ed4872e2b4664983539c2a6c7444f/friendtalk/send
@@ -105,7 +106,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 
 | 키 | 타입 | 필수 | 설명 | 예제 |
 | ------ | ------ | ------ | ------ | ------ |
-| code | text(6) | Y | 처리 결과 코드<br/>(LS0000은 발송 요청 성공 / 나머지는 오류) | "code ":"LS0000" **[<6.1 오류코드 에서 확인 가능>](#61-오류-코드)**|
+| code | text(6) | Y | 처리 결과 코드<br/>(LS0000은 발송 요청 성공 / 나머지는 오류) | "code ":"LS0000" **[<7.1 오류코드 에서 확인 가능>](#71-오류-코드)**|
 | message | text | N | 오류 메시지<br/>(오류시 존재하는 값) | "message ":"AckTimeoutException(1)" |
 
 
@@ -697,8 +698,48 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 }'
 ```
 
-## 6. 코드 정의
-### 6.1 오류 코드
+## 6. WebHook 
+
+- `WebHook Url`을 루나소프트에 사전 등록을 해주셔야 합니다.
+
+#### Request
+
+- path : `루나소프트에 사전 등록된 WebHook Url`
+- method : `POST`
+- header :
+  - Content-Type : application/json
+- body :
+
+```json
+{
+  "message_key": "text",  
+  "message_type": "text",
+  "code": "text",
+  "message": "text",
+  "response_dt": "text"
+}
+```
+| 키                | 타입         | 필수 | 설명                                                   | 예제                                    |
+| ----------------- | ------------ | ---- | ---------------------------------------------------- | ---------------------------------------- |
+| message_key       | text(30)     | Y    | 메시지일련번호 (메시지에 대한 고유값)                   | 605498276                                |
+| message_type      | text(2)      | Y    | 메시지 타입 (FT: 친구톡_텍스트, FI: 친구톡_이미지, FW: 친구톡_와이드_이미지, FL: 친구톡_와이드_아이템_리스트, FC: 친구톡_캐러셀_피드) | FI |
+| code              | text(4)      | Y    | 친구톡 발송 결과 코드                                 | 0000                                      |
+| message           | text         | N    | 친구톡 발송 결과 메시지 (오류시 존재)                   | InvalidParameterException(InvalidMessageTypeException(FA)) |
+| response_dt       | datetime     | Y    | 친구톡 API 발송 응답 시간                              | 2023-07-12 15:10:30                      |
+
+- Sample
+```json
+{
+  "message_key": "605498276",  
+  "message_type": "FI",
+  "code": "1030",
+  "message": "InvalidParameterException(InvalidMessageTypeException(FA))",
+  "response_dt": "2023-07-12 15:10:30"
+}
+```
+
+## 7. 코드 정의
+### 7.1 오류 코드
 
 | code | message | 설명 |
 | --------  | --------  | --------  |
@@ -752,12 +793,12 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 | LS9999 | 루나소프트 API 내부 시스템 에러 | 루나소프트 API 내부 시스템 에러 |
 
 
-## 7. 테스트 방법
+## 8. 테스트 방법
 
-### 7.1 Host
+### 8.1 Host
 > ####**[개발서버]** [https://test-kakao-bizmessage.lunasoft.co.kr/](https://test-kakao-bizmessage.lunasoft.co.kr/)
 
-### 7.2 테스트 선결 조건
+### 8.2 테스트 선결 조건
 + 테스트 카카오톡 채널은 비즈니스 인증이 완료된 채널을 개발서버에 직접 등록하여 발송 가능합니다.
 + 테스트 수신자는 허브파트너의 관리자에 포함되어 있거나, [일회성 인증](/center-api.md#5-개발-서버-테스트-사용자-인증)을 받은 사용자만 가능합니다.
 + 하루에 발송 가능한 테스트 발송량은 허브파트너당 발송 성공 기준 친구톡 500건입니다.
