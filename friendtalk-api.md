@@ -5,9 +5,8 @@
 3. [선결 조건](#3-선결-조건)
 4. [API 스펙](#4-API-스펙)
 5. [발송 타입 별 Example](#5-발송-타입-별-example)
-6. [WebHook](#6-WebHook)
-7. [코드 정의](#7-코드-정의)
-8. [테스트-방법](#8-테스트-방법)
+6. [코드 정의](#6-코드-정의)
+7. [테스트 방법](#7-테스트-방법)
 
 ## 참고 : 변경사항
 
@@ -84,10 +83,10 @@
 
 | 키 | 타입 | 필수 | 설명 | 예제 |
 | --------  | --------  | --------  | --------  | --------  |
-| code | text(4) | Y | 처리 결과 코드<br/>(0000은 정상 / 나머지는 오류) | "code ":"0000" **[<7.1 오류코드 에서 확인 가능>](#71-오류-코드)**|
+| code | text(4) | Y | 처리 결과 코드<br/>(0000은 정상 / 나머지는 오류) | "code ":"0000" **[<6.1 오류코드 에서 확인 가능>](#61-오류-코드)**|
 | message | text | N | 오류 메시지<br/>(오류시 존재하는 값) | "message ":"NoSendAvailableTimeException(1)" |
 
-##### [Example] (※ 테스트 하기 전에 8.1 테스트 선결 조건을 먼저 확인하세요.)
+##### [Example] (※ 테스트 하기 전에 7.1 테스트 선결 조건을 먼저 확인하세요.)
 
 ```
 $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"message_type":"FT","message_key":"00005","sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62","country_code":"82","recipient_number":"01012345678","message":"(광고)채널 추가 없이 보내는 정보형 메시지 \"카카오톡 비즈메시지\"를 소개합니다.","attachment":{"button":[{"name":"비즈메시지 소개","type":"WL","url_pc":"http://bizmessage.kakao.com/", "url_mobile":"http://bizmessage.kakao.com/"}]}}' https://cbt-ext-bzm-api.kakao.com/v3/d856a846049ed4872e2b4664983539c2a6c7444f/friendtalk/send
@@ -106,9 +105,58 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 
 | 키 | 타입 | 필수 | 설명 | 예제 |
 | ------ | ------ | ------ | ------ | ------ |
-| code | text(6) | Y | 처리 결과 코드<br/>(LS0000은 발송 요청 성공 / 나머지는 오류) | "code ":"LS0000" **[<7.1 오류코드 에서 확인 가능>](#71-오류-코드)**|
+| code | text(6) | Y | 처리 결과 코드<br/>(LS0000은 발송 요청 성공 / 나머지는 오류) | "code ":"LS0000" **[<6.1 오류코드 에서 확인 가능>](#61-오류-코드)**|
 | message | text | N | 오류 메시지<br/>(오류시 존재하는 값) | "message ":"AckTimeoutException(1)" |
 
+#### 4.2.3 WebHook 
+
+> 루나소프트 운영 담당자를 통해 `WebHook URL`을 사전에 등록해야 함.
+
+##### [Request]
+
+- path : `루나소프트에 사전 등록된 WebHook Url`
+- method : `POST`
+- header :
+  - Content-Type : application/json
+- body :
+
+```json
+{
+  "code": "text",  
+  "message_key": "text",
+  "message_type": "text",
+  "response_dt": "text",
+  "message": "text"
+}
+```
+| 키                | 타입         | 필수 | 설명                                                   | 예제                                    |
+| ----------------- | ------------ | ---- | ----------------------------------------------------- | ---------------------------------------- |
+| code              | text(6)      | Y    | 처리 결과 코드<br/>(0000은 정상 / 나머지는 오류)         | "code": "0000" **[<6.1 오류코드 에서 확인 가능>](#61-오류-코드)**|
+| message_key       | text(30)     | Y    | 메시지일련번호 (요청시 설정한 메시지일련번호)             | "message_key": "605498276"                                |
+| message_type      | text(2)      | Y    | 메시지 타입<br/>(FT: 친구톡 텍스트, FI: 친구톡 이미지, FW: 친구톡 와이드 이미지, FL: 친구톡 와이드 아이템 리스트, FC: 친구톡 캐러셀 피드) | "message_type": "FI" |
+| response_dt       | datetime     | Y    | 메시지 발송 응답 시간                                   | "response_dt": "2023-07-12 15:10:30"                      |
+| message           | text         | N    | 오류 메시지<br/>(오류시 존재하는 값)                     | "message": "InvalidParameterException(InvalidMessageTypeException(FA))" |
+
+- 발송 성공 Sample
+```json
+{
+  "code": "0000",  
+  "message_key": "605498276",
+  "message_type": "FI",
+  "response_dt": "2023-07-12 15:10:30"
+}
+```
+
+- 발송 실패 Sample
+```json
+{
+  "code": "1030",  
+  "message_key": "605498276",
+  "message_type": "FI",
+  "response_dt": "2023-07-12 15:10:30",
+  "message": "InvalidParameterException(InvalidMessageTypeException(FA))"
+}
+```
 
 
 ### 4.3 친구톡 상품 타입
@@ -150,7 +198,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 + 여러 말풍선을 carousel 필드에 list 로 추가 할 수 있고, 더보기 버튼(tail)을 지정하여 발송 가능<br/>
 + 반드시 내부에 업로드 한 이미지를 발송해야 하며 이미지 업로드는 **[<업로드 API 문서>](/upload-api.md#28-친구톡-캐러셀-이미지-업로드-요청)** 를 확인해주세요.<br/>
 + 제목은 20자, 텍스트 문구는 180자로 제한됩니다.
-+ + 캐러셀 하나 당 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
++ 캐러셀 하나 당 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
 + 광고 발송만 가능합니다.
 
 ### 4.4 Attachment
@@ -698,48 +746,8 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 }'
 ```
 
-## 6. WebHook 
-
-- `WebHook Url`을 루나소프트에 사전 등록을 해주셔야 합니다.
-
-#### Request
-
-- path : `루나소프트에 사전 등록된 WebHook Url`
-- method : `POST`
-- header :
-  - Content-Type : application/json
-- body :
-
-```json
-{
-  "message_key": "text",  
-  "message_type": "text",
-  "code": "text",
-  "message": "text",
-  "response_dt": "text"
-}
-```
-| 키                | 타입         | 필수 | 설명                                                   | 예제                                    |
-| ----------------- | ------------ | ---- | ---------------------------------------------------- | ---------------------------------------- |
-| message_key       | text(30)     | Y    | 메시지일련번호 (메시지에 대한 고유값)                   | 605498276                                |
-| message_type      | text(2)      | Y    | 메시지 타입 (FT: 친구톡_텍스트, FI: 친구톡_이미지, FW: 친구톡_와이드_이미지, FL: 친구톡_와이드_아이템_리스트, FC: 친구톡_캐러셀_피드) | FI |
-| code              | text(4)      | Y    | 친구톡 발송 결과 코드                                 | 0000                                      |
-| message           | text         | N    | 친구톡 발송 결과 메시지 (오류시 존재)                   | InvalidParameterException(InvalidMessageTypeException(FA)) |
-| response_dt       | datetime     | Y    | 친구톡 API 발송 응답 시간                              | 2023-07-12 15:10:30                      |
-
-- Sample
-```json
-{
-  "message_key": "605498276",  
-  "message_type": "FI",
-  "code": "1030",
-  "message": "InvalidParameterException(InvalidMessageTypeException(FA))",
-  "response_dt": "2023-07-12 15:10:30"
-}
-```
-
-## 7. 코드 정의
-### 7.1 오류 코드
+## 6. 코드 정의
+### 6.1 오류 코드
 
 | code | message | 설명 |
 | --------  | --------  | --------  |
@@ -793,12 +801,12 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 | LS9999 | 루나소프트 API 내부 시스템 에러 | 루나소프트 API 내부 시스템 에러 |
 
 
-## 8. 테스트 방법
+## 7. 테스트 방법
 
-### 8.1 Host
+### 7.1 Host
 > ####**[개발서버]** [https://test-kakao-bizmessage.lunasoft.co.kr/](https://test-kakao-bizmessage.lunasoft.co.kr/)
 
-### 8.2 테스트 선결 조건
+### 7.2 테스트 선결 조건
 + 테스트 카카오톡 채널은 비즈니스 인증이 완료된 채널을 개발서버에 직접 등록하여 발송 가능합니다.
 + 테스트 수신자는 허브파트너의 관리자에 포함되어 있거나, [일회성 인증](/center-api.md#5-개발-서버-테스트-사용자-인증)을 받은 사용자만 가능합니다.
 + 하루에 발송 가능한 테스트 발송량은 허브파트너당 발송 성공 기준 친구톡 500건입니다.
