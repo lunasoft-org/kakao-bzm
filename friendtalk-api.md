@@ -66,7 +66,7 @@
 | 키 | 타입 | 필수 | 설명 | 예제 |
 | --------  | --------  | --------  | --------  | --------  |
 | message_type | text(2) | Y | 메시지 타입<br/>(FT: 친구톡_텍스트, FI: 친구톡_이미지, FW: 친구톡_와이드_이미지, FL: 친구톡_와이드_아이템_리스트, FC: 친구톡_캐러셀_피드) | "message_type":"FT" |
-| message_key | text(30) | Y | 메시지일련번호 (메시지에 대한 고유값)| "message_key":"605498276 |
+| message_key | text(27) | Y | 메시지일련번호 (메시지에 대한 고유값)| "message_key":"605498276 |
 | sender_key | text(40) | Y | 발신 프로필 키<br/> | "sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62" |
 | country_code | text(6) | Y | "country_code":"82" | 
 | recipient_number | text(20) | N | 사용자 전화번호<br/>**recipient_number 혹은 app_user_id 둘 중 하나는 반드시 있어야 한다.** | "recipient_number":"01012345678" |
@@ -132,7 +132,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 | 키                | 타입         | 필수 | 설명                                                   | 예제                                    |
 | ----------------- | ------------ | ---- | ----------------------------------------------------- | ---------------------------------------- |
 | code              | text(6)      | Y    | 처리 결과 코드<br/>(0000은 정상 / 나머지는 오류)         | "code": "0000" **[<6.1 오류코드 에서 확인 가능>](#61-오류-코드)**|
-| message_key       | text(30)     | Y    | 메시지일련번호 (요청시 설정한 메시지일련번호)             | "message_key": "605498276"                                |
+| message_key       | text(27)     | Y    | 메시지일련번호 (요청시 설정한 메시지일련번호)             | "message_key": "605498276"                                |
 | message_type      | text(2)      | Y    | 메시지 타입<br/>(FT: 친구톡 텍스트, FI: 친구톡 이미지, FW: 친구톡 와이드 이미지, FL: 친구톡 와이드 아이템 리스트, FC: 친구톡 캐러셀 피드) | "message_type": "FI" |
 | response_dt       | datetime     | Y    | 메시지 발송 응답 시간                                   | "response_dt": "2023-07-12 15:10:30"                      |
 | message           | text         | N    | 오류 메시지<br/>(오류시 존재하는 값)                     | "message": "InvalidParameterException(InvalidMessageTypeException(FA))" |
