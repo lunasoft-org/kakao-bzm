@@ -68,8 +68,8 @@
 | message_type | text(2) | Y | 메시지 타입<br/>(FT: 친구톡_텍스트, FI: 친구톡_이미지, FW: 친구톡_와이드_이미지, FL: 친구톡_와이드_아이템_리스트, FC: 친구톡_캐러셀_피드) | "message_type":"FT" |
 | message_key | text(27) | Y | 메시지일련번호 (메시지에 대한 고유값)| "message_key":"605498276 |
 | sender_key | text(40) | Y | 발신 프로필 키<br/> | "sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62" |
-| country_code | text(6) | Y | "country_code":"82" | 
-| recipient_number | text(20) | N | 사용자 전화번호<br/>**recipient_number 혹은 app_user_id 둘 중 하나는 반드시 있어야 한다.** | "recipient_number":"01012345678" |
+| country_code | text | Y | 국가코드<br/>(**country_code와 recipient_number의 길이 합이 16자로 제한**) | "country_code":"82" |
+| recipient_number | text | N | 사용자 전화번호<br/>**recipient_number 혹은 app_user_id 둘 중 하나는 반드시 있어야 한다.**<br/>(**country_code와 recipient_number의 길이 합이 16자로 제한**) | "recipient_number":"01012345678" |
 | app_user_id | text(20) | N | 앱유저아이디<br/>**recipient_number 혹은 app_user_id 둘 중 하나는 반드시 있어야 한다.** <br/> recipient_number와 app_user_id의 정보가 동시에 요청된 경우 recipient_number로만 발송합니다.| "app_user_id":"12345" |
 | user_key | text(30) | N | 사용자 식별키<br/>카카오톡 채널 봇을 이용해 받은 카카오톡 채널 사용자 식별키 | "user_key":"MZjEVK4x18_V" |
 | message | text(1000) | Y | 사용자에게 전달될 메시지<br/>(공백 포함 1000자로 제한)<br/>FL, FC 타입은 필수 X | "message":"채널 추가 없이 보내는 정보형 메시지 ‘카카오톡 비즈메시지’를 소개합니다." |
