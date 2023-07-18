@@ -210,7 +210,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 | 키 | - | - | 타입 | 필수 | 설명 |
 | --------  | -------- | --------  | --------  | --------  | --------  |
 | button | | | array | - | 버튼 목록 |
-|  | name | | text(28) | Y | 버튼 제목 |
+|  | name | | text(28) | Y | 버튼 제목 (FL - 9자 제한) |
 |  | type | | text(2) | Y | 버튼 타입 **[<4.4.1 버튼 타입에서 확인 가능>](#441-버튼-타입별-속성)** |
 |  | scheme_android | | text | - | mobile android 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
 |  | scheme_ios | | text | - | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
@@ -290,7 +290,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 | | message | - | - | text(180) | Y | 캐러셀 아이템 메시지 |
 | | attachment | - | - | json | N | 캐러셀 아이템 이미지, 버튼 정보 |
 | | - | button | - | array | N | 버튼 목록 |
-| | - | - | name | text(28) | - | 버튼 제목 |
+| | - | - | name | text(8) | - | 버튼 제목 |
 | | - | - | type | text(2) | - | 버튼 타입 **[<4.4.1 버튼 타입에서 확인 가능>](#441-버튼-타입별-속성)** |
 | | - | - | scheme_android | text | - | mobile android 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
 | | - | - | scheme_ios | text | - | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
