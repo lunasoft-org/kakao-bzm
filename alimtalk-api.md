@@ -93,7 +93,7 @@
 ##### [Example] (※ 테스트 하기 전에 7.1 테스트 선결 조건을 먼저 확인하세요.)
 
 ```
-$ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`" -X POST -d '{message_type":"AT","message_key":"2017010100004","sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62","country_code":"82","recipient_number":"01012345678","template_code":"A001_01","message":"임꺽정님이 보낸 등기 1234567_89123456를 홍길동(회사동료)님께 배달 완료 1588-1300"}' https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
+$ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`" -X POST -d '{message_type":"AT","message_key":"2017010100004","sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62","country_code":"82","recipient_number":"01012345678","template_code":"A001_01","message":"임꺽정님이 보낸 등기 1234567_89123456를 홍길동(회사동료)님께 배달 완료 1588-1300"}' https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 
 {"code":"0000","message_key":"2017010100004"}
 ```
@@ -298,7 +298,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "ag
 <img src="/Images/Alimtalk/알림톡_기본.png" alt="기본 알림톡 발송" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -327,7 +327,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/알림톡_배송조회_버튼.png" alt="알림톡 배송조회 버튼" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -362,7 +362,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/알림톡_웹링크_버튼.png" alt="알림톡 웹링크 버튼" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -400,7 +400,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/알림톡_앱링크_버튼.png" alt="알림톡 앱링크 버튼" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -433,7 +433,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/알림톡_봇키워드_버튼.png" alt="알림톡 봇키워드 버튼" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -468,7 +468,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/알림톡_메시지전달_버튼.png" alt="알림톡 메시지전달 버튼" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -505,7 +505,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/알림톡_채널추가_버튼.png" alt="알림톡 채널추가 버튼" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -544,7 +544,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/알림톡_바로연결_웹링크_버튼.png" alt="알림톡 바로연결 웹링크 버튼" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -582,7 +582,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/알림톡_바로연결_앱링크_버튼.png" alt="알림톡 바로연결 앱링크 버튼" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -615,7 +615,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/알림톡_바로연결_봇키워드_버튼.png" alt="알림톡 바로연결 봇키워드 버튼" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -651,7 +651,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/강조표기_알림톡.png" alt="강조표기 알림톡 발송" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -685,7 +685,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/부가정보_포함_알림톡.png" alt="부가정보 포함 알림톡 발송" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -718,7 +718,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/이미지_알림톡.png" alt="이미지 알림톡 발송" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -753,7 +753,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 <img src="/Images/Alimtalk/아이템리스트_알림톡_발송.png" alt="아이템리스트 알림톡 발송" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -898,7 +898,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 
 활성 사용자에게 메시지 전송
 ```
-$ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`" -X POST -d '{"message_type":"AT","message_key":"2017010100004","sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62","country_code":"82","recipient_number":"821012345678","template_code":"A001_01","message":"임꺽정님이 보낸 등기 1234567_89123456를 홍길동(회사동료)님께 배달 완료 1588-1300"}' https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
+$ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`" -X POST -d '{"message_type":"AT","message_key":"2017010100004","sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62","country_code":"82","recipient_number":"821012345678","template_code":"A001_01","message":"임꺽정님이 보낸 등기 1234567_89123456를 홍길동(회사동료)님께 배달 완료 1588-1300"}' https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 
 {"code":"0000","message_key":"2017010100004"}
 ```
@@ -906,13 +906,13 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "ag
 #### 7.3.2 메시지 전송 오류
 1) 일련번호 중복
 ```
-$ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`" -X POST -d '{"message_type":"AT","message_key":"2017010100004","sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62","country_code":"82","recipient_number":"821012345678","template_code":"A001_01","message":"임꺽정님이 보낸 등기 1234567_89123456를 홍길동(회사동료)님께 배달 완료 1588-1300"}' https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
+$ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`" -X POST -d '{"message_type":"AT","message_key":"2017010100004","sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62","country_code":"82","recipient_number":"821012345678","template_code":"A001_01","message":"임꺽정님이 보낸 등기 1234567_89123456를 홍길동(회사동료)님께 배달 완료 1588-1300"}' https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 
 {"code":"3012","message_key":"2017010100004","message":"SerialNumberDuplicatedException(20170101-00001)"}
 ```
 2) 템플릿 없음
 ```
-$ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`" -X POST -d '{"message_type":"AT","message_key":"2017010100004","sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62","country_code":"82","recipient_number":"821012345678","template_code":"A001_01","message":"임꺽정님이 보낸 등기 1234567_89123456를 홍길동(회사동료)님께 배달 완료 1588-1300"}' https://test-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
+$ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`" -X POST -d '{"message_type":"AT","message_key":"2017010100004","sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62","country_code":"82","recipient_number":"821012345678","template_code":"A001_01","message":"임꺽정님이 보낸 등기 1234567_89123456를 홍길동(회사동료)님께 배달 완료 1588-1300"}' https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 
 {"code":"3015","message_key":"2017010100004","message":"TemplateNotFoundException(A001_02)"}
 ```
