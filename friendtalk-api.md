@@ -313,7 +313,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 <img src="/Images/Friendtalk/친구톡_텍스트.png" alt="친구톡 스트" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -358,7 +358,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 <img src="/Images/Friendtalk/친구톡_이미지.png" alt="친구톡 이미지" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -407,7 +407,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 <img src="/Images/Friendtalk/친구톡_와이드이미지.png" alt="친구톡 와이드 이미지" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -446,7 +446,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 <img src="/Images/Friendtalk/친구톡_와이드아이템리스트.png" alt="친구톡 와이드 아이템 리스트" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -509,7 +509,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 <img src="/Images/Friendtalk/친구톡_캐러셀.png" alt="친구톡 캐러셀" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -586,7 +586,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 <img src="/Images/Friendtalk/친구톡_이미지_쿠폰.png" alt="친구톡 이미지 쿠폰" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -641,7 +641,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 <img src="/Images/Friendtalk/친구톡_와이드이미지_쿠폰.png" alt="친구톡 와이드 이미지 쿠폰" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -686,7 +686,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 <img src="/Images/Friendtalk/친구톡_와이드아이템리스트_쿠폰.png" alt="친구톡 와이드 아이템 리스트 쿠폰" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
