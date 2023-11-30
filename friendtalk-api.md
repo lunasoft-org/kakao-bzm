@@ -1,4 +1,4 @@
-# 카카오 비즈메시지 친구톡 API v1.0.0
+# 카카오 비즈메시지 친구톡 API v1.1.0
 
 1. [개요](#1-개요)
 2. [용어 정의](#2-용어-정의)
@@ -12,7 +12,8 @@
 
 | 일시       | 변경 내역                                                                                                                                                                                                                |
 | ---------- | -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 2023.07.    | 카카오 비즈메시지 친구톡 API 초안 작성        
+| 2023.11.29    | - 메시지 타입 추가(FM: 친구톡_커머스, FP: 프리미엄_동영상, FA: 친구톡_캐러셀_커머스)<br/>- 부가 정보(additional_content) 추가<br/>- 와이드 이미지형 버튼 최대 개수 변경(1개 -> 2개)<br/>- 캐러셀 최대 개수 변경(2개 -> 10개)        |
+| 2023.07.    | 카카오 비즈메시지 친구톡 API 초안 작성        |
 
 
 
@@ -65,19 +66,20 @@
 
 | 키 | 타입 | 필수 | 설명 | 예제 |
 | --------  | --------  | --------  | --------  | --------  |
-| message_type | text(2) | Y | 메시지 타입<br/>(FT: 친구톡_텍스트, FI: 친구톡_이미지, FW: 친구톡_와이드_이미지, FL: 친구톡_와이드_아이템_리스트, FC: 친구톡_캐러셀_피드) | "message_type":"FT" |
+| message_type | text(2) | Y | 메시지 타입<br/>(FT: 친구톡_텍스트, FI: 친구톡_이미지, FW: 친구톡_와이드_이미지, FL: 친구톡_와이드_아이템_리스트, FC: 친구톡_캐러셀_피드, FM: 친구톡_커머스, FP: 프리미엄_동영상, FA: 친구톡_캐러셀_커머스) | "message_type":"FT" |
 | message_key | text(27) | Y | 메시지일련번호 (메시지에 대한 고유값)| "message_key":"605498276 |
 | sender_key | text(40) | Y | 발신 프로필 키<br/> | "sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62" |
 | country_code | text | Y | 국가코드<br/>(**country_code와 recipient_number의 길이 합이 16자로 제한**) | "country_code":"82" |
 | recipient_number | text | N | 사용자 전화번호<br/>**recipient_number 혹은 app_user_id 둘 중 하나는 반드시 있어야 한다.**<br/>(**country_code와 recipient_number의 길이 합이 16자로 제한**) | "recipient_number":"01012345678" |
 | app_user_id | text(20) | N | 앱유저아이디<br/>**recipient_number 혹은 app_user_id 둘 중 하나는 반드시 있어야 한다.** <br/> recipient_number와 app_user_id의 정보가 동시에 요청된 경우 recipient_number로만 발송합니다.| "app_user_id":"12345" |
 | user_key | text(30) | N | 사용자 식별키<br/>카카오톡 채널 봇을 이용해 받은 카카오톡 채널 사용자 식별키 | "user_key":"MZjEVK4x18_V" |
-| message | text(1000) | Y | 사용자에게 전달될 메시지<br/>(공백 포함 1000자로 제한)<br/>FL, FC 타입은 필수 X | "message":"채널 추가 없이 보내는 정보형 메시지 ‘카카오톡 비즈메시지’를 소개합니다." |
-| ad_flag | text(1) | N | 광고성 메시지 필수 표기 사항을 노출<br/>(노출 여부 Y/N, 기본값 Y)<br/>FL, FC 타입은 Y로만 발송 가능 | "ad_flag":"Y" |
+| message | text(1000) | Y | 사용자에게 전달될 메시지<br/>(공백 포함 1000자로 제한)<br/>FL, FC 타입은 필수 X, FP타입은 선택 | "message":"채널 추가 없이 보내는 정보형 메시지 ‘카카오톡 비즈메시지’를 소개합니다." |
+| additional_content | text(34) | N | 부가 정보<br/>(공백 포함 34자로 제한)<br/> FM 타입에서 사용 |  |
+| ad_flag | text(1) | N | 광고성 메시지 필수 표기 사항을 노출<br/>(노출 여부 Y/N, 기본값 Y)<br/>FL, FC, FA 타입은 Y로만 발송 가능 | "ad_flag":"Y" |
 | adult | text(1) | N | 성인용 메시지 여부 <br/>(성인용 메시지 여부 Y/N, 기본값 N)<br/>| "adult":"Y" |
 | attachment | json | N | 메시지에 첨부할 내용<br/>(링크 버튼) | "attachment":{"button":[{"name":"비즈메시지 소개","type":"WL","url_pc":"http://bizmessage.kakao.com/", "url_mobile":"http://bizmessage.kakao.com/"}]} **[<4.4 Attachment 에서 확인 가능>](#44-attachment)** |
-| header | text(25) | N | [ 와이드 아이템 리스트 메시지 타입(FL) 사용시 필수 ] | |
-| carousel | json | N | [ 캐러셀 메시지 타입(FC) 사용시 필수 ] | **[<4.5 Carousel>](#45-carousel)**
+| header | text(25) | N | [ 와이드 아이템 리스트 메시지 타입(FL) 사용시 필수, FP타입의 경우 옵션 ] | |
+| carousel | json | N | [ 캐러셀 메시지 타입(FC, FA) 사용시 필수 ] | **[<4.5 Carousel>](#45-carousel)**
 
 ##### [Response]
 
@@ -181,7 +183,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 
 + 기본적으로 텍스트 타입과 동일하나 attachment 필드에 이미지를 추가하여 발송 가능<br/>
 + 반드시 내부에 업로드 한 이미지를 발송해야 하며 이미지 업로드는 **[<업로드 API 문서>](/upload-api.md#26-친구톡-와이드-이미지-업로드-요청)** 를 확인해주세요.<br/>
-+ 이미지 타입의 경우 텍스트 메시지 + 링크 버튼(1개) + 이미지 발송이 가능합니다.
++ 이미지 타입의 경우 텍스트 메시지 + 링크 버튼(최대 2개) + 이미지 발송이 가능합니다.
 + 텍스트 문구는 76자로 제한됩니다.
 
 #### 4.3.4 와이드 아이템 리스트 말풍선 타입
@@ -193,13 +195,36 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 + 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
 + 광고 발송만 가능합니다.
 
-#### 4.3.5 캐러셀 말풍선 타입
+#### 4.3.5 캐러셀 피드 말풍선 타입
 
 + 여러 말풍선을 carousel 필드에 list 로 추가 할 수 있고, 더보기 버튼(tail)을 지정하여 발송 가능<br/>
 + 반드시 내부에 업로드 한 이미지를 발송해야 하며 이미지 업로드는 **[<업로드 API 문서>](/upload-api.md#28-친구톡-캐러셀-이미지-업로드-요청)** 를 확인해주세요.<br/>
 + 제목은 20자, 텍스트 문구는 180자로 제한됩니다.
 + 캐러셀 하나 당 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
 + 광고 발송만 가능합니다.
+
+#### 4.3.6 커머스 말풍선 타입
+
++ 제목은 20자, 부가 정보는 34자로 제한됩니다.
++ 버튼은 최소 1개 이상 포함되어야 하며, 최대 2개까지 포함 가능하며 가로 정렬되어 발송 됩니다.
++ 광고 발송만 가능합니다.
+
+#### 4.3.7 프리미엄 동영상 타입
+
++ 동영상 링크는 카카오TV에 업로드된 영상만 사용 가능합니다(https://tv.kakao.com/v/#{숫자} / https://tv.kakao.com/channel/#{숫자}/cliplink/#{숫자})
++ 헤더는 20자, 텍스트는 76자로 제한됩니다.
++ 헤더와 텍스트는 옵셔널한 값으로 없어도 발송 가능합니다.
++ 버튼은 1개까지 발송가능합니다.
++ 쿠폰은 사용 불가능합니다.
+
+#### 4.3.8 캐러셀 커머스 말풍선 타입
+
++ 여러 커머스 말풍선을 캐러셀로 발송 가능
++ 캐러셀 인트로가 존재하는 경우 캐러셀은 최소 1개 이상 최대 10개 이하 발송 가능
++ 캐러셀 인트로가 존재하지 않는 경우 캐러셀은 최소 2개 이상 최대 10개 이하 발송 가능
++ 각 캐러셀마다 버튼은 1개 필수이며 최대 2개까지 지원
++ 말풍선 1개당 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송 가능
+
 
 ### 4.4 Attachment
 친구톡은 **[<4.2 메시지 전송 요청>](#42-메시지-전송-요청)**의 요청 필드 중 attachment 값에 링크 버튼과 이미지를 첨부하여 발송할 수 있다.<br/>
@@ -221,7 +246,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 |  | img_link | | text | N | 이미지 클릭시 이동할 url<br/>미설정시 카카오톡 내 이미지 뷰어 사용 |
 | item | | | json | N | 와이드 아이템 리스트 전용 |
 |  | list | | array | Y | 와이드 아이템 리스트 (최소:3, 최대: 4) |
-|  | | title | text(25) | Y | 아이템 제목 |
+|  | | title | text | Y | 아이템 제목 |
 |  | | img_url | text | Y | 아이템 이미지 URL |
 |  | | scheme_android | text | N | mobile android 환경에서 이미지 클릭 시 실행할<br/>application custom scheme |
 |  | | scheme_ios | text | N | mobile ios 환경에서 이미지 클릭 시 실행할<br/>application custom scheme |
@@ -229,11 +254,20 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 |  | | url_pc | text | N | pc 환경에서 이미지 클릭 시 이동할 url |
 | coupon | | | json | N | 메세지 최하단에 쿠폰 추가  |
 |  | title | | text | Y | 쿠폰 이름 형식 **[<4.4.2 쿠폰>](#442-쿠폰)** |
-|  | description | | text | Y | 쿠폰 상세 설명 (FT, FI - 12자 / FW, FL - 18자 제한)  |
+|  | description | | text | Y | 쿠폰 상세 설명 (FW, FL - 18자 제한 / 나머지 - 12자 제한)  |
 |  | url_pc | | text | - | pc 환경에서 쿠폰 클릭 시 이동할 url  |
 |  | url_mobile | | text | - | mobile 환경에서 쿠폰 클릭 시 이동할 url |
 |  | scheme_android | | text | - | mobile android 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
 |  | scheme_ios | | text | - | mobile ios 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
+| commerce | | | json | N | 커머스 |
+|  | title | | text | Y | 상품제목 (최대 30자) |
+|  | regular_price | | number | Y | 정상가격 (0 ~ 99,999,999) |
+|  | discount_price | | number | N | 할인가격  (0 ~ 99,999,999) |
+|  | discount_rate | | number | N | 할인율  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (1 ~ 100)|
+|  | discount_fixed | | number | N | 정액할인가격  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 999,999)|
+| video | | | json | N | 비디오 |
+|  | video_url | | text | Y | 카카오TV 동영상 URL |
+|  | thumbnail_url | | text | N | 동영상 썸네일용 이미지 URL, 없는 경우 동영상 기본썸네일 사용 |
 
 ##### [Example]
 
@@ -269,7 +303,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 </br>
 
 #### 4.4.2 쿠폰
-+ 쿠폰형은 메세지 타입이 FT, FI, FW, FL인 경우 사용 가능함.
++ 쿠폰형은 메세지 타입이 FP 제외한 메세지 타입은 사용 가능함.
 + title의 경우 5가지 형식으로 제한 됨
     + "${숫자}원 할인 쿠폰" 숫자는 1이상 99,999,999 이하
     + "${숫자}% 할인 쿠폰" 숫자는 1이상 100 이하
@@ -282,12 +316,13 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 
 ### 4.5 Carousel 
 캐러셀은 **[<4.2 메시지 전송 요청>](#42-메시지-전송-요청)**의 요청 필드 중 carousel 값에 아이템 리스트와 더보기를 설정하여 발송할 수 있다<br/>
-**list 는 목록으로(Array) 최소 2개부터 최대 6개까지** 추가하여 발송할 수 있다.<br/>
+**list 는 목록으로(Array) 최소 2개부터 최대 10개까지** 추가하여 발송할 수 있다.<br/>
 | 키 | - | - | - | 타입 | 필수 | 설명 |
 | --------  | --------  | --------  | --------  | --------  |  --------  |  --------  | 
 | list | - | - | - |  array | Y | Carousel Item List |
-| | header | - | - | text(20) | Y | 캐러셀 아이템 제목 |
-| | message | - | - | text(180) | Y | 캐러셀 아이템 메시지 |
+| | header | - | - | text(20) | N | 캐러셀 아이템 제목<br/> - 캐러셀 피드형(FC) 사용시 필수값 <br/> - 캐러셀 커머스형(FA)은 사용불가 |
+| | message | - | - | text(180) | N | 캐러셀 아이템 메시지<br/> - 캐러셀 피드형(FC) 사용시 필수값 <br/> - 캐러셀 커머스형(FA)은 사용불가) |
+| | additional_content | - | - | text(34) | N | 부가 정보 (공백 포함 34자로 제한)<br/> - 캐러셀 피드형(FC)은 사용불가  |
 | | attachment | - | - | json | N | 캐러셀 아이템 이미지, 버튼 정보 |
 | | - | button | - | array | N | 버튼 목록 |
 | | - | - | name | text(8) | - | 버튼 제목 |
@@ -299,6 +334,19 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 | | - | image | - | json | Y | 캐러셀 썸네일 이미지 |
 | | - | - | img_url | text | Y | 캐러셀 썸네일 이미지 주소 |
 | | - | - | img_link | text | N | 캐러셀 썸네일 링크 주소 |
+| | - | coupon | - | json | N | 캐러셀 최하단에 쿠폰 추가 |
+| | - | - | title | text | Y | 쿠폰 이름 형식 **[<4.4.2 쿠폰>](#442-쿠폰)** |
+| | - | - | description | text(12) | Y | 12자 제한  |
+| | - | - | url_pc | text | - | pc 환경에서 쿠폰 클릭 시 이동할 url  |
+| | - | - | url_mobile | text | - | mobile 환경에서 쿠폰 클릭 시 이동할 url |
+| | - | - | scheme_android | text | - | mobile android 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
+| | - | - | scheme_ios | text | - | mobile ios 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
+| | - | commerce | - | json | N | 커머스 <br/> - 캐러셀 커머스형 (FA) 사용 시 필수값 <br/> - 캐러셀 피드형(FC)은 사용불가  |
+| | - | - | title | text(30) | Y | 상품제목 |
+| | - | - | regular_price | number | Y | 정상가격 (0 ~ 99,999,999) |
+| | - | - | discount_price | number | N | 할인가격  (0 ~ 99,999,999) |
+| | - | - | discount_rate | number | N | 할인율  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (1 ~ 100)|
+| | - | - | discount_fixed | number | N | 정액할인가격  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 999,999)|
 | tail | - | - | - | json | N | 더보기 버튼 정보 |
 | | url_pc | - | - | text | N | pc 환경에서 버튼 클릭 시 이동할 url
 | | url_mobile | - | - | text | Y | mobile 환경에서 버튼 클릭 시 이동할 url
@@ -400,9 +448,8 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 ```
 
 ### 5.3 와이드 이미지 친구톡 발송 요청
-+ 텍스트 메시지 + 링크 버튼 + 이미지 발송이 가능합니다.
++ 텍스트 메시지 + 링크 버튼(최대 2개) + 이미지 발송이 가능합니다.
 + 텍스트 문구는 76자로 제한됩니다.
-+ 버튼은 1개만 등록하여 발송할 수 있습니다.
 + 반드시 카카오 비즈메시지 업로드 API를 통해 업로드 한 와이드 이미지를 발송해야 합니다.
 <img src="/Images/Friendtalk/친구톡_와이드이미지.png" alt="친구톡 와이드 이미지" style="zoom:50%;" />
 
@@ -500,7 +547,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 }'
 ```
 
-### 5.5 캐러셀 친구톡 발송 요청
+### 5.5 캐러셀 피드 친구톡 발송 요청
 + carousel 필드에 list 로 추가 할 수 있고, 더보기 버튼(tail)을 지정하여 발송이 가능합니다.
 + 제목은 20자, 텍스트 문구는 180자로 제한됩니다.
 + 캐러셀 하나 당 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
@@ -568,17 +615,180 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 }'
 ```
 
-### 5.6 쿠폰 발송 요청
-+ 쿠폰형은 메세지 타입이 FT(텍스트), FI(이미지), FW(와이드 이미지), FL(와이드 아이템 리스)인 경우에만 사용이 가능합니다.
+### 5.6 커머스 친구톡 발송 요청
++ 제목은 20자, 부가 정보는 34자로 제한됩니다.
++ 버튼은 최소 1개 이상 포함되어야 하며, 최대 2개까지 포함 가능하며 가로 정렬되어 발송 됩니다.
++ 광고 발송만 가능합니다.
+<img src="/Images/Friendtalk/친구톡_커머스.png" alt="친구톡 커머스" style="zoom:50%;" />
+
+```
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+-H 'Accept: application/json'
+-H 'Content-type: application/json'
+-H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
+-d '{
+    "ad_flag": "Y",
+    "message_type": "FM",
+    "message_key": "0000000001",
+    "sender_key": "b564fa480f3b5c979a30531b9e6035cd5a258e56",
+    "country_code": "82",
+    "recipient_number": "01012345678",
+    "message": "",
+    "additional_content": "단골 고객님께만 드리는 10% 할인 찬스!👀👀",
+    "attachment": {
+        "image": {
+            "img_url": "https://mud-kage.kakao.com/dn/bvV7Ki/btsnaRMJnk1/RWKh7CzFII1B7LMDuh9VgK/img_l.jpg",
+            "img_link": "https://lunasoft.co.kr/"
+        },
+        "button": [
+            {
+                "type": "WL",
+                "name": "10% 할인전 바로가기",
+                "url_mobile": "https://lunasoft.co.kr/",
+                "url_pc": "https://lunasoft.co.kr/"
+            }
+        ],
+        "commerce": {
+            "title": "[루나소프트 신상품 출시 기념] 할인",
+            "regular_price": 1000,
+            "discount_price": 900,
+            "discount_rate": 10,        // discount_rate, discount_fixed 둘 다 입력 시 discount_rate 우선
+            "discount_fixed": 100
+        }
+    }
+}'
+```
+
+### 5.7 프리미엄 동영상 친구톡 발송 요청
++ 동영상 링크는 카카오TV에 업로드된 영상만 사용 가능합니다.(https://tv.kakao.com/v/#{숫자} / https://tv.kakao.com/channel/#{숫자}/cliplink/#{숫자})
++ 헤더는 20자, 텍스트는 76자로 제한됩니다.
++ 헤더와 텍스트는 옵셔널한 값으로 없어도 발송 가능합니다.
++ 버튼은 1개까지 발송가능합니다.
++ 쿠폰은 사용 불가능합니다.
+<img src="/Images/Friendtalk/친구톡_프리미엄_동영상.png" alt="친구톡 프리미엄 동영상" style="zoom:50%;" />
+
+```
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+-H 'Accept: application/json'
+-H 'Content-type: application/json'
+-H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
+-d '{
+    "ad_flag": "Y",
+    "message_type": "FP",
+    "message_key": "0000000001",
+    "sender_key": "b564fa480f3b5c979a30531b9e6035cd5a258e56",
+    "country_code": "82",
+    "recipient_number": "01012345678",
+    "message": "단골 고객님께만 드리는 10% 할인 찬스!👀👀",
+    "attachment": {
+        "button": [
+            {
+                "type": "WL",
+                "name": "10% 할인전 바로가기",
+                "url_mobile": "https://lunasoft.co.kr/",
+                "url_pc": "https://lunasoft.co.kr/"
+            }
+        ],
+        "video": {
+            "video_url": "https://tv.kakao.com/channel/2878006/cliplink/410632501",
+            "thumbnail_url": "https://mud-kage.kakao.com/dn/bvV7Ki/btsnaRMJnk1/RWKh7CzFII1B7LMDuh9VgK/img_l.jpg"
+        }
+    },
+    "header": "[루나소프트 신상품 출시 기념]"
+}'
+```
+
+### 5.8 캐러셀 커머스 친구톡 발송 요청
++ 여러 커머스 말풍선을 캐러셀로 발송 가능합니다.
++ 캐러셀 인트로가 존재하는 경우 캐러셀은 최소 1개 이상 최대 10개 이하 발송 가능합니다.
++ 캐러셀 인트로가 존재하지 않는 경우 캐러셀은 최소 2개 이상 최대 10개 이하 발송 가능합니다.
++ 각 캐러셀마다 버튼은 1개 필수이며 최대 2개까지 지원합니다.
++ 말풍선 1개당 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송 가능합니다.
+<img src="/Images/Friendtalk/친구톡_캐러셀_커머스.png" alt="친구톡 캐러셀 커머스" style="zoom:50%;" />
+
+```
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+-H 'Accept: application/json'
+-H 'Content-type: application/json'
+-H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
+-d '{
+    "ad_flag": "Y",
+    "message_type": "FA",
+    "message_key": "0000000001",
+    "sender_key": "b564fa480f3b5c979a30531b9e6035cd5a258e56",
+    "country_code": "82",
+    "recipient_number": "01012345678",
+    "message": "",
+    "carousel": {
+        "list": [
+            {
+                "message": "프리런칭 5% 세일가에 득템해가라냥!",
+                "attachment": {
+                    "button": [
+                        {
+                            "type": "WL",
+                            "name": "자세히 보기",
+                            "url_mobile": "https://store.kakaofriends.com/products/10069",
+                            "url_pc": "https://store.kakaofriends.com/products/10069"
+                        }
+                    ],
+                    "image": {
+                        "img_url": "https://mud-kage.kakao.com/dn/bvV7Ki/btsnaRMJnk1/RWKh7CzFII1B7LMDuh9VgK/img_l.jpg",
+                        "img_link": "https://store.kakaofriends.com/products/10069"
+                    },
+                    "commerce": {
+                        "title": "깜찍한 춘식이 3in1 무선충전패드",
+                        "regular_price": 1000,
+                        "discount_price": 900,
+                        "discount_rate": null,
+                        "discount_fixed": 100
+                    }
+                }
+            },
+            {
+                "message": "더운 요즘 자꾸 찾게 돼!\n달콤한 아이스크림에 빠진 프렌즈",
+                "attachment": {
+                    "button": [
+                        {
+                            "type": "WL",
+                            "name": "자세히 보기",
+                            "url_mobile": "https://store.kakaofriends.com/promotions/1756",
+                            "url_pc": "https://store.kakaofriends.com/promotions/1756"
+                        }
+                    ],
+                    "image": {
+                        "img_url": "https://mud-kage.kakao.com/dn/bvV7Ki/btsnaRMJnk1/RWKh7CzFII1B7LMDuh9VgK/img_l.jpg",
+                        "img_link": "https://store.kakaofriends.com/promotions/1756"
+                    },
+                    "commerce": {
+                        "title": "ITS SO SWEET!",
+                        "regular_price": 1000,
+                        "discount_price": 900,
+                        "discount_rate": 10,
+                        "discount_fixed": null
+                    }
+                }
+            }
+        ],
+        "tail": {
+            "url_mobile": "https://store.kakaofriends.com/home",
+            "url_pc": "https://store.kakaofriends.com/home"
+        }
+    }
+}'
+```
+
+### 5.9 쿠폰 발송 요청
++ 쿠폰형은 메세지 타입이 FP(프리미엄동영상) 제외한 메세지 타입은 사용 가능합니다.
 + title의 경우 5가지 형식으로 제한 됩니다.
     + "${숫자}원 할인 쿠폰" 숫자는 1이상 99,999,999 이하
     + "${숫자}% 할인 쿠폰" 숫자는 1이상 100 이하
     + "배송비 할인 쿠폰"
     + "${7자 이내} 무료 쿠폰"
     + "${7자 이내} UP 쿠폰"
-+ description의 경우 메시지 타입 FT(텍스트), FI(이미지) - 12자로 제한 / FW(와이드 이미지), FL(와이드 아이템 리스트) - 18자로 제한됩니다.
++ description의 경우 메시지 타입 FW(와이드 이미지), FL(와이드 아이템 리스트) - 18자로 제한/ 나머지 - 12자로 제한 제한됩니다.
 
-#### 5.6.1 이미지 친구톡 + 쿠폰 발송 요청
+#### 5.9.1 이미지 친구톡 + 쿠폰 발송 요청
 + 텍스트 메시지 + 링크 버튼 + 이미지 + 쿠폰 발송이 가능합니다.
 + 텍스트 문구는 400자로 제한됩니다.
 + 버튼은 최대 4개까지 등록하여 발송할 수 있습니다.
@@ -586,7 +796,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 <img src="/Images/Friendtalk/친구톡_이미지_쿠폰.png" alt="친구톡 이미지 쿠폰" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -633,15 +843,14 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 }'
 ```
 
-#### 5.6.2 와이드 이미지 친구톡 + 쿠폰 발송 요청
-+ 텍스트 메시지 + 링크 버튼 + 이미지 + 쿠폰 발송이 가능합니다.
+#### 5.9.2 와이드 이미지 친구톡 + 쿠폰 발송 요청
++ 텍스트 메시지 + 링크 버튼(최대 2개) + 이미지 + 쿠폰 발송이 가능합니다.
 + 텍스트 문구는 76자로 제한됩니다.
-+ 버튼은 1개만 등록하여 발송할 수 있습니다.
 + 반드시 내부에 업로드 한 와이드 이미지를 발송해야 합니다.
 <img src="/Images/Friendtalk/친구톡_와이드이미지_쿠폰.png" alt="친구톡 와이드 이미지 쿠폰" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -676,7 +885,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 }'
 ```
 
-#### 5.6.3 와이드 아이템 리스트 친구톡 + 쿠폰 발송 요청
+#### 5.9.3 와이드 아이템 리스트 친구톡 + 쿠폰 발송 요청
 + 여러 아이템 리스트를 attachment.item.list 필드에 담아서 발송이 가능합니다.
 + item > list > title 텍스트 문구는 25자로 제한됩니다.
 + 최대 4개 / 최소 3개의 아이템 리스트가 필요합니다.
@@ -686,7 +895,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 <img src="/Images/Friendtalk/친구톡_와이드아이템리스트_쿠폰.png" alt="친구톡 와이드 아이템 리스트 쿠폰" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
