@@ -1,4 +1,4 @@
-# 카카오 비즈메시지 알림톡 API v1.0.0
+# 카카오 비즈메시지 알림톡 API v1.0.1
 
 1. [개요](#1-개요)
 2. [용어 정의](#2-용어-정의)
@@ -12,7 +12,8 @@
 
 | 일시       | 변경 내역                                                                                                                                                                                                                |
 | ---------- | -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 2022.10.    | 카카오 비즈메시지 알림톡 API 초안 작성        
+| 2024.07.    | 링크 버튼 클릭 시 이동 방식 (target) 추가<br/> - 버튼 : attachment.button[].target<br/> - 바로연결 : supplement.quick_reply[].target<br/>`웹링크(WL)만 적용 가능`
+| 2022.10.    | 카카오 비즈메시지 알림톡 API 초안 작성
 
 ## 1. 개요
 
@@ -189,6 +190,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "ag
 |  | scheme_ios |  | text | - | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
 |  | url_mobile |  | text | - | mobile 환경에서 버튼 클릭 시 이동할 url |
 |  | url_pc |  | text | - | pc 환경에서 버튼 클릭 시 이동할 url |
+|  | target |  | text | - | 링크 버튼 클릭 시 이동 방식<br/>(기본정책은 인앱브라우저 연결, "target":"out"은 인앱브라우저로 연결 불가 등 상황에서만 제한적 사용 권장) |
 |  | chat_extra |  | text(50) | - | 상담톡/봇 전환 시 전달할 메타정보 |
 |  | chat_event |  | text(50) | - | 봇 전환 시 연결할 봇 이벤트명 |
 |  | plugin_id |  | text(24) | - | 플러그인 ID |
@@ -261,6 +263,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "ag
 |  | scheme_ios | text | - | mobile ios 환경에서 바로연결 클릭 시 실행할<br/>application custom scheme |
 |  | url_mobile | text | - | mobile 환경에서 바로연결 클릭 시 이동할 url |
 |  | url_pc | text | - | pc 환경에서 바로연결 클릭 시 이동할 url |
+|  | target | text | - | 링크 버튼 클릭 시 이동 방식<br/>(기본정책은 인앱브라우저 연결, "target":"out"은 인앱브라우저로 연결 불가 등 상황에서만 제한적 사용 권장) |
 |  | chat_extra | text(50) | - | 상담톡/봇 전환 시 전달할 메타정보 |
 |  | chat_event | text(50) | - | 봇 전환 시 연결할 봇 이벤트명 |
 
