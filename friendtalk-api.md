@@ -1,4 +1,4 @@
-# 카카오 비즈메시지 친구톡 API v1.1.0
+# 카카오 비즈메시지 친구톡 API v1.2.0
 
 1. [개요](#1-개요)
 2. [용어 정의](#2-용어-정의)
@@ -12,6 +12,7 @@
 
 | 일시       | 변경 내역                                                                                                                                                                                                                |
 | ---------- | -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 2024.07.    | - 캐러셀 인트로 정보(carousel.head) 추가<br/>- FP(프리미엄 동영상) 쿠폰 사용 가능       |
 | 2023.11.29    | - 메시지 타입 추가(FM: 친구톡_커머스, FP: 프리미엄_동영상, FA: 친구톡_캐러셀_커머스)<br/>- 부가 정보(additional_content) 추가<br/>- 와이드 이미지형 버튼 최대 개수 변경(1개 -> 2개)<br/>- 캐러셀 최대 개수 변경(2개 -> 10개)        |
 | 2023.07.    | 카카오 비즈메시지 친구톡 API 초안 작성        |
 
@@ -70,9 +71,9 @@
 | message_key | text(27) | Y | 메시지일련번호 (메시지에 대한 고유값)| "message_key":"605498276 |
 | sender_key | text(40) | Y | 발신 프로필 키<br/> | "sender_key":"2662e99eb7a1f21abb3955278e9955f5a9a99b62" |
 | country_code | text | Y | 국가코드<br/>(**country_code와 recipient_number의 길이 합이 16자로 제한**) | "country_code":"82" |
-| recipient_number | text | N | 사용자 전화번호<br/>**recipient_number 혹은 app_user_id 둘 중 하나는 반드시 있어야 한다.**<br/>(**country_code와 recipient_number의 길이 합이 16자로 제한**) | "recipient_number":"01012345678" |
-| app_user_id | text(20) | N | 앱유저아이디<br/>**recipient_number 혹은 app_user_id 둘 중 하나는 반드시 있어야 한다.** <br/> recipient_number와 app_user_id의 정보가 동시에 요청된 경우 recipient_number로만 발송합니다.| "app_user_id":"12345" |
-| user_key | text(30) | N | 사용자 식별키<br/>카카오톡 채널 봇을 이용해 받은 카카오톡 채널 사용자 식별키 | "user_key":"MZjEVK4x18_V" |
+| recipient_number | text | N | 사용자 전화번호<br/>(**country_code와 recipient_number의 길이 합이 16자로 제한**) | "recipient_number":"01012345678" |
+| app_user_id | text(20) | N | 앱유저아이디<br/>**recipient_number, app_user_id, user_key 셋 중 하나는 필수이며 동시에 요청 된 경우 recipient_number > app_user_id > user_key 의 우선순위를 가집니다.** | "app_user_id":"12345" |
+| user_key | text(30) | N | 사용자 식별키<br/>카카오톡 채널 봇을 이용해 받은 카카오톡 채널 사용자 식별키<br/>**recipient_number, app_user_id, user_key 셋 중 하나는 필수이며 동시에 요청 된 경우 recipient_number > app_user_id > user_key 의 우선순위를 가집니다.** | "user_key":"MZjEVK4x18_V" |
 | message | text(1000) | Y | 사용자에게 전달될 메시지<br/>(공백 포함 1000자로 제한)<br/>FL, FC 타입은 필수 X, FP타입은 선택 | "message":"채널 추가 없이 보내는 정보형 메시지 ‘카카오톡 비즈메시지’를 소개합니다." |
 | additional_content | text(34) | N | 부가 정보<br/>(공백 포함 34자로 제한)<br/> FM 타입에서 사용 |  |
 | ad_flag | text(1) | N | 광고성 메시지 필수 표기 사항을 노출<br/>(노출 여부 Y/N, 기본값 Y)<br/>FL, FC, FA 타입은 Y로만 발송 가능 | "ad_flag":"Y" |
@@ -163,7 +164,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 
 ### 4.3 친구톡 상품 타입
 + 친구톡은 카카오톡 사용자가 발신프로필(카카오톡 채널)의 채널을 추가한 경우 경우 발송되며 발송 성공 기준으로 과금 여부를 판단합니다.
-+ 요청 시 recipient_number 또는 user_key로 발송가능하며 phone_number가 존재하지 않을 경우에만 user_key를 탐색하여 발송됩니다.<br/>
++ 요청 시 recipient_number, app_user_id, user_key 중 하나로 발송가능하며 여러 값이 동시에 요청될 경우 recipient_number > app_user_id > user_key 의 우선순위를 가집니다.<br/>
 + 발송 제약 시간(20시 ~ 익일 08시) 존재합니다.
 
 
@@ -190,7 +191,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 
 + 하나의 말풍선에 여러 아이템 리스트를 attachment.item.list 필드에 담아서 발송 가능<br/>
 + 반드시 내부에 업로드 한 이미지를 발송해야 하며 이미지 업로드는 **[<업로드 API 문서>](/upload-api.md#27-친구톡-와이드-아이템-리스트-이미지-업로드-요청)** 를 확인해주세요.<br/>
-+ item > list > title 텍스트 문구는 25자로 제한됩니다.
++ item > list > title 텍스트 문구는 첫번째 아이템은 25자, 2~4번째 아이템은 30자로 제한됩니다.
 + 최대 4개 / 최소 3개의 아이템 리스트가 필요합니다.
 + 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
 + 광고 발송만 가능합니다.
@@ -199,15 +200,16 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 
 + 여러 말풍선을 carousel 필드에 list 로 추가 할 수 있고, 더보기 버튼(tail)을 지정하여 발송 가능<br/>
 + 반드시 내부에 업로드 한 이미지를 발송해야 하며 이미지 업로드는 **[<업로드 API 문서>](/upload-api.md#28-친구톡-캐러셀-이미지-업로드-요청)** 를 확인해주세요.<br/>
-+ 제목은 20자, 텍스트 문구는 180자로 제한됩니다.
++ 제목(헤더)은 20자, 텍스트 문구는 180자로 제한됩니다.
 + 캐러셀 하나 당 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
++ 캐러셀 1개당 제목(헤더) + 텍스트 문구 + 링크 버튼(2개/가로배열) + 이미지 발송 가능
 + 광고 발송만 가능합니다.
 
 #### 4.3.6 커머스 말풍선 타입
 
-+ 제목은 20자, 부가 정보는 34자로 제한됩니다.
++ 부가 정보는 34자로 제한됩니다.
 + 버튼은 최소 1개 이상 포함되어야 하며, 최대 2개까지 포함 가능하며 가로 정렬되어 발송 됩니다.
-+ 광고 발송만 가능합니다.
++ 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송이 가능합니다.
 
 #### 4.3.7 프리미엄 동영상 타입
 
@@ -215,7 +217,6 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 + 헤더는 20자, 텍스트는 76자로 제한됩니다.
 + 헤더와 텍스트는 옵셔널한 값으로 없어도 발송 가능합니다.
 + 버튼은 1개까지 발송가능합니다.
-+ 쿠폰은 사용 불가능합니다.
 
 #### 4.3.8 캐러셀 커머스 말풍선 타입
 
@@ -223,8 +224,8 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 + 캐러셀 인트로가 존재하는 경우 캐러셀은 최소 1개 이상 최대 10개 이하 발송 가능
 + 캐러셀 인트로가 존재하지 않는 경우 캐러셀은 최소 2개 이상 최대 10개 이하 발송 가능
 + 각 캐러셀마다 버튼은 1개 필수이며 최대 2개까지 지원
-+ 말풍선 1개당 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송 가능
-
++ 캐러셀 1개당 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송 가능
++ 광고 발송만 가능합니다.
 
 ### 4.4 Attachment
 친구톡은 **[<4.2 메시지 전송 요청>](#42-메시지-전송-요청)**의 요청 필드 중 attachment 값에 링크 버튼과 이미지를 첨부하여 발송할 수 있다.<br/>
@@ -254,7 +255,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 |  | | url_pc | text | N | pc 환경에서 이미지 클릭 시 이동할 url |
 | coupon | | | json | N | 메세지 최하단에 쿠폰 추가  |
 |  | title | | text | Y | 쿠폰 이름 형식 **[<4.4.2 쿠폰>](#442-쿠폰)** |
-|  | description | | text | Y | 쿠폰 상세 설명 (FW, FL - 18자 제한 / 나머지 - 12자 제한)  |
+|  | description | | text | Y | 쿠폰 상세 설명 (FW, FL, FP - 18자 제한 / 나머지 - 12자 제한)  |
 |  | url_pc | | text | - | pc 환경에서 쿠폰 클릭 시 이동할 url  |
 |  | url_mobile | | text | - | mobile 환경에서 쿠폰 클릭 시 이동할 url |
 |  | scheme_android | | text | - | mobile android 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
@@ -263,7 +264,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 |  | title | | text | Y | 상품제목 (최대 30자) |
 |  | regular_price | | number | Y | 정상가격 (0 ~ 99,999,999) |
 |  | discount_price | | number | N | 할인가격  (0 ~ 99,999,999) |
-|  | discount_rate | | number | N | 할인율  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (1 ~ 100)|
+|  | discount_rate | | number | N | 할인율  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 100)|
 |  | discount_fixed | | number | N | 정액할인가격  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 999,999)|
 | video | | | json | N | 비디오 |
 |  | video_url | | text | Y | 카카오TV 동영상 URL |
@@ -303,7 +304,8 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 </br>
 
 #### 4.4.2 쿠폰
-+ 쿠폰형은 메세지 타입이 FP 제외한 메세지 타입은 사용 가능함.
++ 쿠폰형은 모든 메세지 타입이 사용 가능함.
++ 세로형 버튼을 사용하는 FT, FI의 경우 쿠폰을 적용할 경우 최대 버튼 4개까지만 사용 가능.
 + title의 경우 5가지 형식으로 제한 됨
     + "${숫자}원 할인 쿠폰" 숫자는 1이상 99,999,999 이하
     + "${숫자}% 할인 쿠폰" 숫자는 1이상 100 이하
@@ -319,6 +321,14 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 **list 는 목록으로(Array) 최소 2개부터 최대 10개까지** 추가하여 발송할 수 있다.<br/>
 | 키 | - | - | - | 타입 | 필수 | 설명 |
 | --------  | --------  | --------  | --------  | --------  |  --------  |  --------  | 
+| head | - | - | - |  json | N | 캐러셀 인트로 정보<br/>  - 캐러셀 피드형(FC)은 사용불가 |
+| | header | - | - | text(20) | Y | 캐러셀 인트로 헤더 |
+| | content | - | - | text(50) | Y | 캐러셀 인트로 내용 |
+| | image_url | - | - | text | Y | 캐러셀 인트로 이미지 주소 |
+| | url_mobile | - | - | text | N | mobile 환경에서 인트로 클릭 시 이동할 url<br/>url_mobile, url_pc, scheme_android, scheme_ios 넷 중 하나라도 빈 값이 아니라면 url_mobile이 필수  |
+| | url_pc | - | - | text | N | pc 환경에서 인트로 클릭 시 이동할 url |
+| | scheme_android | - | - | text | N | mobile android 환경에서 인트로 클릭 시 실행할<br/>application custom scheme |
+| | scheme_ios | - | - | text | N | mobile ios 환경에서 인트로 클릭 시 실행할<br/>application custom scheme |
 | list | - | - | - |  array | Y | Carousel Item List |
 | | header | - | - | text(20) | N | 캐러셀 아이템 제목<br/> - 캐러셀 피드형(FC) 사용시 필수값 <br/> - 캐러셀 커머스형(FA)은 사용불가 |
 | | message | - | - | text(180) | N | 캐러셀 아이템 메시지<br/> - 캐러셀 피드형(FC) 사용시 필수값 <br/> - 캐러셀 커머스형(FA)은 사용불가) |
@@ -345,7 +355,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 | | - | - | title | text(30) | Y | 상품제목 |
 | | - | - | regular_price | number | Y | 정상가격 (0 ~ 99,999,999) |
 | | - | - | discount_price | number | N | 할인가격  (0 ~ 99,999,999) |
-| | - | - | discount_rate | number | N | 할인율  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (1 ~ 100)|
+| | - | - | discount_rate | number | N | 할인율  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 100)|
 | | - | - | discount_fixed | number | N | 정액할인가격  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 999,999)|
 | tail | - | - | - | json | N | 더보기 버튼 정보 |
 | | url_pc | - | - | text | N | pc 환경에서 버튼 클릭 시 이동할 url
@@ -485,7 +495,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 
 ### 5.4 와이드 아이템 리스트 친구톡 발송 요청
 + 여러 아이템 리스트를 attachment.item.list 필드에 담아서 발송이 가능합니다.
-+ item > list > title 텍스트 문구는 25자로 제한됩니다.
++ item > list > title 텍스트 문구는 첫번째 아이템은 25자, 2~4번째 아이템은 30자로 제한됩니다.
 + 최대 4개 / 최소 3개의 아이템 리스트가 필요합니다.
 + 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
 + 반드시 카카오 비즈메시지 업로드 API를 통해 업로드 한 와이드 아이템 리스트 이미지를 발송해야 합니다.
@@ -549,8 +559,9 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 
 ### 5.5 캐러셀 피드 친구톡 발송 요청
 + carousel 필드에 list 로 추가 할 수 있고, 더보기 버튼(tail)을 지정하여 발송이 가능합니다.
-+ 제목은 20자, 텍스트 문구는 180자로 제한됩니다.
++ 제목(헤더)은 20자, 텍스트 문구는 180자로 제한됩니다.
 + 캐러셀 하나 당 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
++ 캐러셀 1개당 제목(헤더) + 텍스트 문구 + 링크 버튼(2개/가로배열) + 이미지 발송 가능합니다.
 + 반드시 카카오 비즈메시지 업로드 API를 통해 업로드 한 캐러셀 이미지를 발송해야 합니다.
 + 광고 발송만 가능합니다.
 <img src="/Images/Friendtalk/친구톡_캐러셀.png" alt="친구톡 캐러셀" style="zoom:50%;" />
@@ -616,9 +627,9 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 ```
 
 ### 5.6 커머스 친구톡 발송 요청
-+ 제목은 20자, 부가 정보는 34자로 제한됩니다.
++ 부가 정보는 34자로 제한됩니다.
 + 버튼은 최소 1개 이상 포함되어야 하며, 최대 2개까지 포함 가능하며 가로 정렬되어 발송 됩니다.
-+ 광고 발송만 가능합니다.
++ 캐러셀 1개당 제목(헤더) + 텍스트 문구 + 링크 버튼(2개/가로배열) + 이미지 발송 가능합니다.
 <img src="/Images/Friendtalk/친구톡_커머스.png" alt="친구톡 커머스" style="zoom:50%;" />
 
 ```
@@ -664,7 +675,6 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 + 헤더는 20자, 텍스트는 76자로 제한됩니다.
 + 헤더와 텍스트는 옵셔널한 값으로 없어도 발송 가능합니다.
 + 버튼은 1개까지 발송가능합니다.
-+ 쿠폰은 사용 불가능합니다.
 <img src="/Images/Friendtalk/친구톡_프리미엄_동영상.png" alt="친구톡 프리미엄 동영상" style="zoom:50%;" />
 
 ```
@@ -703,7 +713,8 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 + 캐러셀 인트로가 존재하는 경우 캐러셀은 최소 1개 이상 최대 10개 이하 발송 가능합니다.
 + 캐러셀 인트로가 존재하지 않는 경우 캐러셀은 최소 2개 이상 최대 10개 이하 발송 가능합니다.
 + 각 캐러셀마다 버튼은 1개 필수이며 최대 2개까지 지원합니다.
-+ 말풍선 1개당 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송 가능합니다.
++ 캐러셀 1개당 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송 가능합니다.
++ 광고 발송만 가능합니다.
 <img src="/Images/Friendtalk/친구톡_캐러셀_커머스.png" alt="친구톡 캐러셀 커머스" style="zoom:50%;" />
 
 ```
@@ -779,14 +790,15 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 ```
 
 ### 5.9 쿠폰 발송 요청
-+ 쿠폰형은 메세지 타입이 FP(프리미엄동영상) 제외한 메세지 타입은 사용 가능합니다.
++ 쿠폰형은 모든 메세지 타입이 사용 가능합니다.
++ 세로형 버튼을 사용하는 FT, FI의 경우 쿠폰을 적용할 경우 최대 버튼 4개까지만 사용 가능합니다.
 + title의 경우 5가지 형식으로 제한 됩니다.
     + "${숫자}원 할인 쿠폰" 숫자는 1이상 99,999,999 이하
     + "${숫자}% 할인 쿠폰" 숫자는 1이상 100 이하
     + "배송비 할인 쿠폰"
     + "${7자 이내} 무료 쿠폰"
     + "${7자 이내} UP 쿠폰"
-+ description의 경우 메시지 타입 FW(와이드 이미지), FL(와이드 아이템 리스트) - 18자로 제한/ 나머지 - 12자로 제한 제한됩니다.
++ description의 경우 메시지 타입 FW(와이드 이미지), FL(와이드 아이템 리스트), FP(프리미엄 동영상) - 18자로 제한/ 나머지 - 12자로 제한 제한됩니다.
 
 #### 5.9.1 이미지 친구톡 + 쿠폰 발송 요청
 + 텍스트 메시지 + 링크 버튼 + 이미지 + 쿠폰 발송이 가능합니다.
@@ -796,7 +808,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 <img src="/Images/Friendtalk/친구톡_이미지_쿠폰.png" alt="친구톡 이미지 쿠폰" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -850,7 +862,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 <img src="/Images/Friendtalk/친구톡_와이드이미지_쿠폰.png" alt="친구톡 와이드 이미지 쿠폰" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -887,7 +899,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 
 #### 5.9.3 와이드 아이템 리스트 친구톡 + 쿠폰 발송 요청
 + 여러 아이템 리스트를 attachment.item.list 필드에 담아서 발송이 가능합니다.
-+ item > list > title 텍스트 문구는 25자로 제한됩니다.
++ item > list > title 텍스트 문구는 첫번째 아이템은 25자, 2~4번째 아이템은 30자로 제한됩니다.
 + 최대 4개 / 최소 3개의 아이템 리스트가 필요합니다.
 + 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
 + 반드시 내부에 업로드 한 와이드 아이템 리스트 이미지를 발송해야 합니다.
@@ -895,7 +907,7 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 <img src="/Images/Friendtalk/친구톡_와이드아이템리스트_쿠폰.png" alt="친구톡 와이드 아이템 리스트 쿠폰" style="zoom:50%;" />
 
 ```
-$ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
 -H 'Accept: application/json'
 -H 'Content-type: application/json'
 -H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
@@ -992,10 +1004,15 @@ $ curl -X POST https://test-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
 | 3014 | MessageLengthOverLimitException | 메시지 길이 제한 오류<br/>(텍스트 타입 1000자 초과, 이미지 타입 400자 초과, 캐러셀 180자 초과) |
 | 3018 | NoSendAvailableException | 메시지를 전송할 수 없음 |
 | 3022 | NoSendAvailableTimeException | 메시지 발송 가능한 시간이 아님<br/>(친구톡 / 마케팅 메시지는 08시부터 20시 50분까지 발송 가능) |
+| 3023 | MessageInvalidVideoException | 메시지에 포함된 비디오를 전송할 수 없음<br>(비디오 주소 또는 썸네일 이미지 주소가 올바르지 않거나 썸네일 이미지가 규격에 맞지 않음) |
 | 3024 | MessageInvalidImageException | 메시지에 포함된 이미지를 전송할 수 없음<br>(이미지주소 또는 링크가 올바르지 않거나 이미지가 규격에 맞지 않음) |
 | 3041 | MessageInvalidWideItemListLengthException | 와이드 아이템 리스트 갯수 최대 최소 갯수 불일치 |
+| 3046 | ExceedMaxAdditionalContentLengthException | 부가 정보 최대 길이 제한 오류 |
+| 3047 | ExceedMaxCommerceTitleLengthException | 커머스 정보 상품명 최대 길이 제한 오류 |
 | 3051 | InvalidateCarouselItemMinException or InvalidateCarouselItemMaxException | 캐러셀 아이템 리스트 갯수 최소, 최대 갯수 불일치 |
 | 3052 | CarouselMessageLengthOverLimitException | 캐러셀 아이템 메시지 길이 OVER |
+| 3056 | WideItemListTitleLengthOverLimitException | 와이드 아이템 리스트 타이틀 길이 제한 오류 |
+| 3058 | CarouselHeaderLengthOverLimitException | 캐러셀 헤더 길이 제한 오류 |
 | 4000 | ResponseHistoryNotFoundException | 메시지 전송 결과를 찾을 수 없음 |
 | 4001 | UnknownMessageStatusError | 알 수 없는 메시지 상태 |
 | 5000 | InvalidTestUser | (테스트 발송) 관리자 혹은 일회성 인증을 받은 사용자가 아님 |
