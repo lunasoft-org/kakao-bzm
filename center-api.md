@@ -923,7 +923,7 @@ curl -v -X POST -d 'senderKey={senderKey}' -d 'senderKeyType=S' -d 'templateCode
 ##### [Parameter]
 | 키            | 타입     | 필수 | 설명 |
 | ------------- | ------- | --- | --- |
-| senderKey     | text(40)| N   | 발신 프로필 키 |
+| senderKey     | text(40)| Y   | 발신 프로필 키 |
 | senderKeyType | text(1) | N   | 발신프로필타입 (G:그룹, S:기본(default)) |
 | since         | text(14)| N   | 기준시간 yyyyMMddHHmmss (default는 요청한 시간부터 1시간전) |
 | page          | number  | N   | 페이지 (default : 1) |
