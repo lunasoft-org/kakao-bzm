@@ -1,4 +1,4 @@
-# 카카오 비즈메시지 알림톡 API v1.0.1
+# 카카오 비즈메시지 알림톡 API v1.1.0
 
 1. [개요](#1-개요)
 2. [용어 정의](#2-용어-정의)
@@ -12,6 +12,7 @@
 
 | 일시       | 변경 내역                                                                                                                                                                                                                |
 | ---------- | -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 2024.09.    | 대체 문자 발송 내용(failover_message) 추가       
 | 2024.07.    | 링크 버튼 클릭 시 이동 방식 (target) 추가<br/> - 버튼 : attachment.button[].target<br/> - 바로연결 : supplement.quick_reply[].target<br/>`웹링크(WL)만 적용 가능`
 | 2022.10.    | 카카오 비즈메시지 알림톡 API 초안 작성
 
@@ -37,7 +38,7 @@
 + 메시지 전송 시스템의 IP 정보를 루나소프트 운영 담당자에게 전달하여 메시지 API 서버에 접근할 수 있도록 **접근 허용 요청**을 해야 한다.
 
 + 루나소프트 운영 담당자를 통해 발송에 필요한 `AgentKey`를 발급 받아야 한다. (발송 시 header에 추가)
-+ 비 실시간 발송 시 루나소프트 운영 담당자를 통해 `WebHook URL`을 사전에 등록해야 한다.
++ 비 실시간 발송 시 루나소프트 운영 담당자를 통해 `Webhook URL`을 사전에 등록해야 한다.
 
 ## 4. API 스펙
 
@@ -80,6 +81,7 @@
 | supplement | json | N | 메시지에 첨부할 바로연결<br/>(링크 버튼 / "target":"out" 속성 추가시 아웃링크) | ```"supplement":{"quick_reply":[{"name":"버튼명","type":"WL","url_pc":"https://lunasoft.co.kr/home/main/page/main/index", "url_mobile":"http://daum.net","target":"out"}]}```<br/> **[<4.4 Supplement 에서 확인 가능>](#44-Supplement)**|
 | price | number | N | 모먼트 광고 전환 최적화 전용<br/>메시지 내 포함된 가격/금액/결제금액 | "price":39900 |
 | currency_type | text(3) | N | 모먼트 광고 전환 최적화 전용<br/>메시지 내 포함된 가격/금액/결제금액의 통화단위 <br>KRW, USD, EUR 등 국제 통화 코드 사용 | "currency_type":"KRW" |
+| failover_message | json | N | 대체 문자 발송 내용 | ```"failover_message":{"from_number": "16444998","title": "대체 문자 제목", "message": "대체 문자 메시지"}```<br/> **[<4.5 Failover Message 에서 확인 가능>](#45-Failover-Message)**|
 + **모먼트 광고 전환 최적화 전용 필드는 메시지 본문에 반영되지 않습니다.**
 
 ##### [Response]
@@ -115,8 +117,8 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "ag
 | message | text | N | 오류 메시지<br/>(오류시 존재하는 값) | "message ":"AckTimeoutException(1)" |
 
 ##### 4.2.3 Webhook
-> 루나소프트 운영 담당자를 통해 `WebHook URL`을 사전에 등록해야 함.
-- path : `사전에 등록된 WebHook URL`
+> 루나소프트 운영 담당자를 통해 `Webhook URL`을 사전에 등록해야 함.
+- path : `사전에 등록된 Webhook URL`
 - method : `POST`
 - header :
   - Content-Type : application/json
@@ -294,6 +296,22 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -H "ag
 |  | chat_extra | text | N | 봇 전환 시 전달할 메타정보 |
 |  | chat_event | text | N | 봇 전환 시 연결할 봇 이벤트명 |
 | BF | biz_form_id | number | Y | [카카오 비즈니스](https://business.kakao.com/)에서 생성한 비즈니스폼 ID |
+
+
+### 4.5 Failover Message
+> 대체 문자 발송 결과 코드는 Webhook을 통해서만 받을 수 있으며, 문자 메시지 특성 상 최대 3일 이내 응답을 받을 수 있습니다.<br/>발송 결과를 받을 수 있는 별도의 Webhook 설정이 필요합니다.<br/>한국 휴대폰 번호로만 메시지 전송이 가능하며, 장문 메시지를 보낼 경우 메시지 길이 가 90byte(EUC-KR) 를 초과하는 경우 LMS로 발송 됩니다.<br/>대체 문자 메시지 제목(title)은 한국 장문(LMS) 발송 시에만 유효합니다.
+
++ **알림톡 발송이 실패 할 경우, 설정된 대체 문자 메시지로 발송 처리 됩니다.**
++ **대체 문자 메시지(message) 내 광고성 정보가 포함될 수 없으며, 광고성 메시지 발송으로 인한 법적 문제는 전송자에게 있습니다.**
++ **모든 문자 길이는 `EUC-KR` 인코딩 기준 입니다.**
+
+[알림톡 대체 문자 메시지 Webhook 및 오류코드 확인](https://github.com/lunasoft-org/kakao-bzm/blob/main/failover-textmessage.md)
+
+| 키 | 타입 | 필수 | 설명 | 예제 |
+| ------ | ------ | ------ | ------ | ------ |
+| from_number | text | Y | 발신번호 | "from_number":"15441234" |
+| title | text | N | 대체 문자 제목 (최대 길이 40byte)<br/>(한국 장문(LMS) 발송 시에만 유효함) | "title":"대체 문자 제목" |
+| message | text | Y | 대체 문자 메시지<br/>(메시지 길이가 90byte를 초과하는 경우 LMS로 발송 (최대 길이 2,000byte)) | "message":"대체 문자 메시지" |
 
 
 ## 5. 발송 타입 별 Example
@@ -804,6 +822,49 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
             }
             ]
         }
+    }
+}'
+```
+
+
+### 5.8 대체 문자 메시지 포함 알림톡 발송 요청
++ 알림톡 발송이 실패 할 경우, 설정된 대체 문자 메시지로 발송 처리 됩니다.
++ 대체 문자 제목(title)은 한국 장문(LMS) 발송 시에만 유효합니다.
++ 대체 문자 메시지(message) 내 광고성 정보가 포함될 수 없으며, 광고성 메시지 발송으로 인한 법적 문제는 전송자에게 있습니다.
+
+```
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send 
+-H 'Accept: application/json'
+-H 'Content-type: application/json'
+-H 'agentKey: `사전에 루나소프트 운영 담당자를 통해 전달 받은 AgentKey`'
+-d '{
+    "message_type": "AT",
+    "message_key": "0000000025",
+    "sender_key": "2662e99eb7a1f21abb3955278e9955f5a9a99b62",
+    "country_code": "82",
+    "recipient_number": "01012345678",
+    "template_code": "100017",
+    "message": "[루나소프트] 회원가입 안내\nTEST님, 루나소프트 회원이 되신 것을 환영합니다.\n    \n▶신규 가입 회원 혜택\n신규 가입 회원 혜택 정보 - 1\n신규 가입 회원 혜택 정보 - 2",
+    "attachment": {
+        "button": [
+            {
+                "type": "WL",
+                "name": "홈페이지 바로가기",
+                "url_mobile": "http://lunasoft.co.kr",
+                "url_pc": "http://lunasoft.co.kr"
+            },
+            {
+                "type": "WL",
+                "name": "웹링크 바로가기",
+                "url_mobile": "http://lunasoft.co.kr",
+                "url_pc": "http://lunasoft.co.kr"
+            }
+        ]
+    },
+    "failover_message": {
+        "from_number": "15889876",
+        "title": "회원가입 안내",
+        "message": "[루나소프트]\nTEST님, 루나소프트 회원이 되신 것을 환영합니다.\n    \n▶신규 가입 회원 혜택\n신규 가입 회원 혜택 정보 - 1\n신규 가입 회원 혜택 정보 - 2"
     }
 }'
 ```
