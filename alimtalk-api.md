@@ -912,6 +912,9 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 | 3015 | TemplateNotFoundException | 템플릿을 찾을 수 없음 |
 | 3016 | NoMatchedTemplateException | 메시지 내용이 템플릿과 일치하지 않음 |
 | 3018 | NoSendAvailableException | 메시지를 전송할 수 없음 |
+| 3019 | MessageNoUserException         | 톡 유저가 아님               |
+| 3020 | MessageUserBlockedAlimtalkException | 알림톡 수신 차단              |
+| 3021 | MessageNotSupportedKakaotalkException | 톡 최소 버전 미지원   |
 | 3025 | ExceedMaxVariableLengthException | 변수 글자수 제한 초과 |
 | 3026 | Button chat_extra(event)-InvalidExtra(EventName)Exception '([A-Za-z0-9_]{1,50})' | 상담/봇 전환 버튼 extra, event 글자수 제한 초과 |
 | 3027 | NoMatchedTemplateButtonException / NoMatchedTemplateQuickReplyException | 메시지 버튼/바로연결이 템플릿과 일치하지 않음 |
@@ -940,6 +943,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/alimtalk/send
 | LS0101 | 외부 서비스 API 타임 아웃 | 카카오톡 비즈메시지 알림톡 API 타임 아웃 |
 | LS0102 | 외부 서비스 API Http Exception 발생 | 카카오톡 비즈메시지 알림톡 API Http Exception 발생 |
 | LS9999 | 루나소프트 API 내부 시스템 에러 | 루나소프트 API 내부 시스템 에러 |
+
 
 ## 7. 테스트 방법
 
