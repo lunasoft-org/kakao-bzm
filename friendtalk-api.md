@@ -12,6 +12,7 @@
 
 | 일시       | 변경 내역                                                                                                                                                                                                                |
 | ---------- | -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 2025.12.    | 브랜드 메시지로 변경       |
 | 2024.07.    | - 캐러셀 인트로 정보(carousel.head) 추가<br/>- FP(프리미엄 동영상) 쿠폰 사용 가능       |
 | 2023.11.29    | - 메시지 타입 추가(FM: 친구톡_커머스, FP: 프리미엄_동영상, FA: 친구톡_캐러셀_커머스)<br/>- 부가 정보(additional_content) 추가<br/>- 와이드 이미지형 버튼 최대 개수 변경(1개 -> 2개)<br/>- 캐러셀 최대 개수 변경(2개 -> 10개)        |
 | 2023.07.    | 카카오 비즈메시지 친구톡 API 초안 작성        |
@@ -74,7 +75,7 @@
 | recipient_number | text | N | 사용자 전화번호<br/>(**country_code와 recipient_number의 길이 합이 16자로 제한**) | "recipient_number":"01012345678" |
 | app_user_id | text(20) | N | 앱유저아이디<br/>**recipient_number, app_user_id, user_key 셋 중 하나는 필수이며 동시에 요청 된 경우 recipient_number > app_user_id > user_key 의 우선순위를 가집니다.** | "app_user_id":"12345" |
 | user_key | text(30) | N | 사용자 식별키<br/>카카오톡 채널 봇을 이용해 받은 카카오톡 채널 사용자 식별키<br/>**recipient_number, app_user_id, user_key 셋 중 하나는 필수이며 동시에 요청 된 경우 recipient_number > app_user_id > user_key 의 우선순위를 가집니다.** | "user_key":"MZjEVK4x18_V" |
-| message | text(1000) | Y | 사용자에게 전달될 메시지<br/>(공백 포함 1000자로 제한)<br/>FL, FC 타입은 필수 X, FP타입은 선택 | "message":"채널 추가 없이 보내는 정보형 메시지 ‘카카오톡 비즈메시지’를 소개합니다." |
+| message | text(1000) | Y | 사용자에게 전달될 메시지<br/>(공백 포함 1000자로 제한)<br/>FL, FC 타입은 필수 X, FP타입은 선택<br> 텍스트, 이미지 줄바꿈 최대 99 <br> 와이드 이미지, 비디오 최대 줄바꿈 5 | "message":"채널 추가 없이 보내는 정보형 메시지 ‘카카오톡 비즈메시지’를 소개합니다." |
 | additional_content | text(34) | N | 부가 정보<br/>(공백 포함 34자로 제한)<br/> FM 타입에서 사용 |  |
 | ad_flag | text(1) | N | 광고성 메시지 필수 표기 사항을 노출<br/>(노출 여부 Y/N, 기본값 Y)<br/>FL, FC, FA 타입은 Y로만 발송 가능 | "ad_flag":"Y" |
 | adult | text(1) | N | 성인용 메시지 여부 <br/>(성인용 메시지 여부 Y/N, 기본값 N)<br/>| "adult":"Y" |
@@ -221,8 +222,8 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 #### 4.3.8 캐러셀 커머스 말풍선 타입
 
 + 여러 커머스 말풍선을 캐러셀로 발송 가능
-+ 캐러셀 인트로가 존재하는 경우 캐러셀은 최소 1개 이상 최대 10개 이하 발송 가능
-+ 캐러셀 인트로가 존재하지 않는 경우 캐러셀은 최소 2개 이상 최대 10개 이하 발송 가능
++ 캐러셀 인트로가 존재하는 경우 캐러셀은 최소 1개 이상 최대 6개 이하 발송 가능
++ 캐러셀 인트로가 존재하지 않는 경우 캐러셀은 최소 2개 이상 최대 6개 이하 발송 가능
 + 각 캐러셀마다 버튼은 1개 필수이며 최대 2개까지 지원
 + 캐러셀 1개당 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송 가능
 + 광고 발송만 가능합니다.
@@ -236,30 +237,30 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 | 키 | - | - | 타입 | 필수 | 설명 |
 | --------  | -------- | --------  | --------  | --------  | --------  |
 | button | | | array | - | 버튼 목록 |
-|  | name | | text(28) | Y | 버튼 제목 (FL - 9자 제한) |
+|  | name | | text | Y | 버튼 제목 <br/> 텍스트, 이미지 최대 14글자<br> 그 외 최대 8글자 |
 |  | type | | text(2) | Y | 버튼 타입 **[<4.4.1 버튼 타입에서 확인 가능>](#441-버튼-타입별-속성)** |
-|  | scheme_android | | text | - | mobile android 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
-|  | scheme_ios | | text | - | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
-|  | url_mobile | | text | - | mobile 환경에서 버튼 클릭 시 이동할 url |
-|  | url_pc | | text | - | pc 환경에서 버튼 클릭 시 이동할 url |
+|  | scheme_android | | text(500) | - | mobile android 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
+|  | scheme_ios | | text(500) | - | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
+|  | url_mobile | | text(500) | - | mobile 환경에서 버튼 클릭 시 이동할 url |
+|  | url_pc | | text(500) | - | pc 환경에서 버튼 클릭 시 이동할 url |
 | image | | | json | N | 이미지 |
 |  | img_url | | text | Y | 노출할 이미지 |
 |  | img_link | | text | N | 이미지 클릭시 이동할 url<br/>미설정시 카카오톡 내 이미지 뷰어 사용 |
 | item | | | json | N | 와이드 아이템 리스트 전용 |
 |  | list | | array | Y | 와이드 아이템 리스트 (최소:3, 최대: 4) |
 |  | | title | text | Y | 아이템 제목 |
-|  | | img_url | text | Y | 아이템 이미지 URL |
-|  | | scheme_android | text | N | mobile android 환경에서 이미지 클릭 시 실행할<br/>application custom scheme |
-|  | | scheme_ios | text | N | mobile ios 환경에서 이미지 클릭 시 실행할<br/>application custom scheme |
-|  | | url_mobile | text | Y | mobile 환경에서 이미지 클릭 시 이동할 url |
-|  | | url_pc | text | N | pc 환경에서 이미지 클릭 시 이동할 url |
+|  | | img_url | text(500) | Y | 아이템 이미지 URL |
+|  | | scheme_android | text(500) | N | mobile android 환경에서 이미지 클릭 시 실행할<br/>application custom scheme |
+|  | | scheme_ios | text(500) | N | mobile ios 환경에서 이미지 클릭 시 실행할<br/>application custom scheme |
+|  | | url_mobile | text(500) | Y | mobile 환경에서 이미지 클릭 시 이동할 url |
+|  | | url_pc | text(500) | N | pc 환경에서 이미지 클릭 시 이동할 url |
 | coupon | | | json | N | 메세지 최하단에 쿠폰 추가  |
-|  | title | | text | Y | 쿠폰 이름 형식 **[<4.4.2 쿠폰>](#442-쿠폰)** |
+|  | title | | text | Y | 쿠폰 상세 설명 <br> FT, FI - 12자 / FW, FL - 18자 제한 <br> 줄바꿈 불가 |
 |  | description | | text | Y | 쿠폰 상세 설명 (FW, FL, FP - 18자 제한 / 나머지 - 12자 제한)  |
-|  | url_pc | | text | - | pc 환경에서 쿠폰 클릭 시 이동할 url  |
-|  | url_mobile | | text | - | mobile 환경에서 쿠폰 클릭 시 이동할 url |
-|  | scheme_android | | text | - | mobile android 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
-|  | scheme_ios | | text | - | mobile ios 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
+|  | url_pc | | text(500) | - | pc 환경에서 쿠폰 클릭 시 이동할 url  |
+|  | url_mobile | | text(500) | - | mobile 환경에서 쿠폰 클릭 시 이동할 url |
+|  | scheme_android | | text(500) | - | mobile android 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
+|  | scheme_ios | | text(500) | - | mobile ios 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
 | commerce | | | json | N | 커머스 |
 |  | title | | text | Y | 상품제목 (최대 30자) |
 |  | regular_price | | number | Y | 정상가격 (0 ~ 99,999,999) |
@@ -287,12 +288,12 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 
 | 버튼타입 | 속성 | 타입 | 필수 | 설명 |
 | ------ | ------ | ------ | ------ | ------ |
-| WL | url_mobile | text | Y | 버튼 클릭 시 이동할 pc/mobile환경별 web url |
-| | url_pc | text | N | |
-| AL | scheme_android | text | - | **scheme_ios, scheme_android, url_mobile 중 2가지 필수 입력**<br/>mobile android 환경에서 버튼 클릭 시 실행할 application custom scheme |
-| | scheme_ios | text | - | mobile ios 환경에서 버튼 클릭 시 실행할 application custom scheme |
-| | url_mobile | text | - | mobile 환경에서 버튼 클릭 시 이동할 url |
-| | url_pc | text | N | pc 환경에서 버튼 클릭 시 이동할 url |
+| WL | url_mobile | text(500) | Y | 버튼 클릭 시 이동할 pc/mobile환경별 web url |
+| | url_pc | text(500) | N | |
+| AL | scheme_android | text(500) | - | **scheme_ios, scheme_android, url_mobile 중 2가지 필수 입력**<br/>mobile android 환경에서 버튼 클릭 시 실행할 application custom scheme |
+| | scheme_ios | text(500) | - | mobile ios 환경에서 버튼 클릭 시 실행할 application custom scheme |
+| | url_mobile | text(500) | - | mobile 환경에서 버튼 클릭 시 이동할 url |
+| | url_pc | text(500) | N | pc 환경에서 버튼 클릭 시 이동할 url |
 | BK | - | - | - | 해당 버튼 텍스트 전송 |
 | MD | - | - | - | 해당 버튼 텍스트 + 메시지 본문 전송 |
 | BC | - | - | - | 상담톡을 이용하는 카카오톡 채널만 이용가능 |
@@ -318,17 +319,17 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 
 ### 4.5 Carousel 
 캐러셀은 **[<4.2 메시지 전송 요청>](#42-메시지-전송-요청)**의 요청 필드 중 carousel 값에 아이템 리스트와 더보기를 설정하여 발송할 수 있다<br/>
-**list 는 목록으로(Array) 최소 2개부터 최대 10개까지** 추가하여 발송할 수 있다.<br/>
+**list 는 목록으로(Array) 최소 2개부터 최대 6개까지** 추가하여 발송할 수 있다.<br/>
 | 키 | - | - | - | 타입 | 필수 | 설명 |
 | --------  | --------  | --------  | --------  | --------  |  --------  |  --------  | 
 | head | - | - | - |  json | N | 캐러셀 인트로 정보<br/>  - 캐러셀 피드형(FC)은 사용불가 |
 | | header | - | - | text(20) | Y | 캐러셀 인트로 헤더 |
 | | content | - | - | text(50) | Y | 캐러셀 인트로 내용 |
-| | image_url | - | - | text | Y | 캐러셀 인트로 이미지 주소 |
-| | url_mobile | - | - | text | N | mobile 환경에서 인트로 클릭 시 이동할 url<br/>url_mobile, url_pc, scheme_android, scheme_ios 넷 중 하나라도 빈 값이 아니라면 url_mobile이 필수  |
-| | url_pc | - | - | text | N | pc 환경에서 인트로 클릭 시 이동할 url |
-| | scheme_android | - | - | text | N | mobile android 환경에서 인트로 클릭 시 실행할<br/>application custom scheme |
-| | scheme_ios | - | - | text | N | mobile ios 환경에서 인트로 클릭 시 실행할<br/>application custom scheme |
+| | image_url | - | - | text(500) | Y | 캐러셀 인트로 이미지 주소 |
+| | url_mobile | - | - | text(500) | N | mobile 환경에서 인트로 클릭 시 이동할 url<br/>url_mobile, url_pc, scheme_android, scheme_ios 넷 중 하나라도 빈 값이 아니라면 url_mobile이 필수  |
+| | url_pc | - | - | text(500) | N | pc 환경에서 인트로 클릭 시 이동할 url |
+| | scheme_android | - | - | text(500) | N | mobile android 환경에서 인트로 클릭 시 실행할<br/>application custom scheme |
+| | scheme_ios | - | - | text(500) | N | mobile ios 환경에서 인트로 클릭 시 실행할<br/>application custom scheme |
 | list | - | - | - |  array | Y | Carousel Item List |
 | | header | - | - | text(20) | N | 캐러셀 아이템 제목<br/> - 캐러셀 피드형(FC) 사용시 필수값 <br/> - 캐러셀 커머스형(FA)은 사용불가 |
 | | message | - | - | text(180) | N | 캐러셀 아이템 메시지<br/> - 캐러셀 피드형(FC) 사용시 필수값 <br/> - 캐러셀 커머스형(FA)은 사용불가) |
@@ -337,20 +338,20 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 | | - | button | - | array | N | 버튼 목록 |
 | | - | - | name | text(8) | - | 버튼 제목 |
 | | - | - | type | text(2) | - | 버튼 타입 **[<4.4.1 버튼 타입에서 확인 가능>](#441-버튼-타입별-속성)** |
-| | - | - | scheme_android | text | - | mobile android 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
-| | - | - | scheme_ios | text | - | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
-| | - | - | url_mobile | text | - | mobile 환경에서 버튼 클릭 시 이동할 url |
-| | - | - | url_pc | text | - | pc 환경에서 버튼 클릭 시 이동할 url |
+| | - | - | scheme_android | text(500) | - | mobile android 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
+| | - | - | scheme_ios | text(500) | - | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme |
+| | - | - | url_mobile | text(500) | - | mobile 환경에서 버튼 클릭 시 이동할 url |
+| | - | - | url_pc | text(500) | - | pc 환경에서 버튼 클릭 시 이동할 url |
 | | - | image | - | json | Y | 캐러셀 썸네일 이미지 |
 | | - | - | img_url | text | Y | 캐러셀 썸네일 이미지 주소 |
-| | - | - | img_link | text | N | 캐러셀 썸네일 링크 주소 |
+| | - | - | img_link | text(500) | N | 캐러셀 썸네일 링크 주소 |
 | | - | coupon | - | json | N | 캐러셀 최하단에 쿠폰 추가 |
 | | - | - | title | text | Y | 쿠폰 이름 형식 **[<4.4.2 쿠폰>](#442-쿠폰)** |
 | | - | - | description | text(12) | Y | 12자 제한  |
-| | - | - | url_pc | text | - | pc 환경에서 쿠폰 클릭 시 이동할 url  |
-| | - | - | url_mobile | text | - | mobile 환경에서 쿠폰 클릭 시 이동할 url |
-| | - | - | scheme_android | text | - | mobile android 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
-| | - | - | scheme_ios | text | - | mobile ios 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
+| | - | - | url_pc | text(500) | - | pc 환경에서 쿠폰 클릭 시 이동할 url  |
+| | - | - | url_mobile | text(500) | - | mobile 환경에서 쿠폰 클릭 시 이동할 url |
+| | - | - | scheme_android | text(500) | - | mobile android 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
+| | - | - | scheme_ios | text(500) | - | mobile ios 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme |
 | | - | commerce | - | json | N | 커머스 <br/> - 캐러셀 커머스형 (FA) 사용 시 필수값 <br/> - 캐러셀 피드형(FC)은 사용불가  |
 | | - | - | title | text(30) | Y | 상품제목 |
 | | - | - | regular_price | number | Y | 정상가격 (0 ~ 99,999,999) |
@@ -358,10 +359,10 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 | | - | - | discount_rate | number | N | 할인율  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 100)|
 | | - | - | discount_fixed | number | N | 정액할인가격  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 999,999)|
 | tail | - | - | - | json | N | 더보기 버튼 정보 |
-| | url_pc | - | - | text | N | pc 환경에서 버튼 클릭 시 이동할 url
-| | url_mobile | - | - | text | Y | mobile 환경에서 버튼 클릭 시 이동할 url
-| | scheme_ios | - | - | text | N | mobile ios 환경에서 버튼 클릭 시 실행할 application custom scheme |
-| | scheme_android | - | - | text | N | mobile android 환경에서 버튼 클릭 시 실행할 application custom scheme |
+| | url_pc(500) | - | - | text | N | pc 환경에서 버튼 클릭 시 이동할 url
+| | url_mobile(500) | - | - | text | Y | mobile 환경에서 버튼 클릭 시 이동할 url
+| | scheme_ios(500) | - | - | text | N | mobile ios 환경에서 버튼 클릭 시 실행할 application custom scheme |
+| | scheme_android(500) | - | - | text | N | mobile android 환경에서 버튼 클릭 시 실행할 application custom scheme |
 
 ## 5. 발송 타입 별 Example
 ### 5.1 텍스트 친구톡 발송 요청
@@ -710,8 +711,8 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 
 ### 5.8 캐러셀 커머스 친구톡 발송 요청
 + 여러 커머스 말풍선을 캐러셀로 발송 가능합니다.
-+ 캐러셀 인트로가 존재하는 경우 캐러셀은 최소 1개 이상 최대 10개 이하 발송 가능합니다.
-+ 캐러셀 인트로가 존재하지 않는 경우 캐러셀은 최소 2개 이상 최대 10개 이하 발송 가능합니다.
++ 캐러셀 인트로가 존재하는 경우 캐러셀은 최소 1개 이상 최대 6개 이하 발송 가능합니다.
++ 캐러셀 인트로가 존재하지 않는 경우 캐러셀은 최소 2개 이상 최대 6개 이하 발송 가능합니다.
 + 각 캐러셀마다 버튼은 1개 필수이며 최대 2개까지 지원합니다.
 + 캐러셀 1개당 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송 가능합니다.
 + 광고 발송만 가능합니다.
@@ -1003,6 +1004,8 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 | 3013 | MessageEmptyException | 메시지가 비어 있음 |
 | 3014 | MessageLengthOverLimitException | 메시지 길이 제한 오류<br/>(텍스트 타입 1000자 초과, 이미지 타입 400자 초과, 캐러셀 180자 초과) |
 | 3018 | NoSendAvailableException | 메시지를 전송할 수 없음 |
+| 3019 | MessageNoUserException         | 톡 유저가 아님               |
+| 3021 | MessageNotSupportedKakaotalkException | 톡 최소 버전 미지원    |
 | 3022 | NoSendAvailableTimeException | 메시지 발송 가능한 시간이 아님<br/>(친구톡 / 마케팅 메시지는 08시부터 20시 50분까지 발송 가능) |
 | 3023 | MessageInvalidVideoException | 메시지에 포함된 비디오를 전송할 수 없음<br>(비디오 주소 또는 썸네일 이미지 주소가 올바르지 않거나 썸네일 이미지가 규격에 맞지 않음) |
 | 3024 | MessageInvalidImageException | 메시지에 포함된 이미지를 전송할 수 없음<br>(이미지주소 또는 링크가 올바르지 않거나 이미지가 규격에 맞지 않음) |
