@@ -76,7 +76,7 @@
 | app_user_id | text(20) | N | 앱유저아이디<br/>**recipient_number, app_user_id, user_key 셋 중 하나는 필수이며 동시에 요청 된 경우 recipient_number > app_user_id > user_key 의 우선순위를 가집니다.** | "app_user_id":"12345" |
 | user_key | text(30) | N | 사용자 식별키<br/>카카오톡 채널 봇을 이용해 받은 카카오톡 채널 사용자 식별키<br/>**recipient_number, app_user_id, user_key 셋 중 하나는 필수이며 동시에 요청 된 경우 recipient_number > app_user_id > user_key 의 우선순위를 가집니다.** | "user_key":"MZjEVK4x18_V" |
 | message | text(1000) | Y | 사용자에게 전달될 메시지<br/>(공백 포함 1000자로 제한)<br/>FL, FC 타입은 필수 X, FP타입은 선택<br> 텍스트, 이미지 줄바꿈 최대 99 <br> 와이드 이미지, 비디오 최대 줄바꿈 5 | "message":"채널 추가 없이 보내는 정보형 메시지 ‘카카오톡 비즈메시지’를 소개합니다." |
-| additional_content | text(34) | N | 부가 정보<br/>(공백 포함 34자로 제한)<br/> FM 타입에서 사용 |  |
+| additional_content | text(34) | N | 부가 정보<br/>(공백 포함 34자로 제한)<br/> FM 타입에서 사용 <br/>**COMMERCE 줄바꿈: 최대 1개**|  |
 | ad_flag | text(1) | N | 광고성 메시지 필수 표기 사항을 노출<br/>(노출 여부 Y/N, 기본값 Y)<br/>FL, FC, FA 타입은 Y로만 발송 가능 | "ad_flag":"Y" |
 | adult | text(1) | N | 성인용 메시지 여부 <br/>(성인용 메시지 여부 Y/N, 기본값 N)<br/>| "adult":"Y" |
 | attachment | json | N | 메시지에 첨부할 내용<br/>(링크 버튼) | "attachment":{"button":[{"name":"비즈메시지 소개","type":"WL","url_pc":"http://bizmessage.kakao.com/", "url_mobile":"http://bizmessage.kakao.com/"}]} **[<4.4 Attachment 에서 확인 가능>](#44-attachment)** |
@@ -255,7 +255,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 |  | | url_mobile | text(500) | Y | mobile 환경에서 이미지 클릭 시 이동할 url |
 |  | | url_pc | text(500) | N | pc 환경에서 이미지 클릭 시 이동할 url |
 | coupon | | | json | N | 메세지 최하단에 쿠폰 추가  |
-|  | title | | text | Y | 쿠폰 상세 설명 <br> FT, FI - 12자 / FW, FL - 18자 제한 <br> 줄바꿈 불가 |
+|  | title | | text | Y | 쿠폰 상세 설명 <br> FT, FI - 12자 / FW, FL - 18자 제한 <br/> 줄바꿈 불가 |
 |  | description | | text | Y | 쿠폰 상세 설명 (FW, FL, FP - 18자 제한 / 나머지 - 12자 제한)  |
 |  | url_pc | | text(500) | - | pc 환경에서 쿠폰 클릭 시 이동할 url  |
 |  | url_mobile | | text(500) | - | mobile 환경에서 쿠폰 클릭 시 이동할 url |
@@ -323,17 +323,17 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 | 키 | - | - | - | 타입 | 필수 | 설명 |
 | --------  | --------  | --------  | --------  | --------  |  --------  |  --------  | 
 | head | - | - | - |  json | N | 캐러셀 인트로 정보<br/>  - 캐러셀 피드형(FC)은 사용불가 |
-| | header | - | - | text(20) | Y | 캐러셀 인트로 헤더 |
-| | content | - | - | text(50) | Y | 캐러셀 인트로 내용 |
+| | header | - | - | text(20) | Y | 캐러셀 인트로 헤더 **줄바꿈: 불가** |
+| | content | - | - | text(50) | Y | 캐러셀 인트로 내용 **줄바꿈: 최대2개**|
 | | image_url | - | - | text(500) | Y | 캐러셀 인트로 이미지 주소 |
 | | url_mobile | - | - | text(500) | N | mobile 환경에서 인트로 클릭 시 이동할 url<br/>url_mobile, url_pc, scheme_android, scheme_ios 넷 중 하나라도 빈 값이 아니라면 url_mobile이 필수  |
 | | url_pc | - | - | text(500) | N | pc 환경에서 인트로 클릭 시 이동할 url |
 | | scheme_android | - | - | text(500) | N | mobile android 환경에서 인트로 클릭 시 실행할<br/>application custom scheme |
 | | scheme_ios | - | - | text(500) | N | mobile ios 환경에서 인트로 클릭 시 실행할<br/>application custom scheme |
 | list | - | - | - |  array | Y | Carousel Item List |
-| | header | - | - | text(20) | N | 캐러셀 아이템 제목<br/> - 캐러셀 피드형(FC) 사용시 필수값 <br/> - 캐러셀 커머스형(FA)은 사용불가 |
-| | message | - | - | text(180) | N | 캐러셀 아이템 메시지<br/> - 캐러셀 피드형(FC) 사용시 필수값 <br/> - 캐러셀 커머스형(FA)은 사용불가) |
-| | additional_content | - | - | text(34) | N | 부가 정보 (공백 포함 34자로 제한)<br/> - 캐러셀 피드형(FC)은 사용불가  |
+| | header | - | - | text(20) | N | 캐러셀 아이템 제목<br/> **줄바꿈: 불가* <br/> - 캐러셀 피드형(FC) 사용시 필수값 <br/> - 캐러셀 커머스형(FA)은 사용불가 |
+| | message | - | - | text(180) | N | 캐러셀 아이템 메시지<br/> **줄바꿈: 최대10개** <br/> - 캐러셀 피드형(FC) 사용시 필수값 <br/> - 캐러셀 커머스형(FA)은 사용불가) |
+| | additional_content | - | - | text(34) | N | 부가 정보 (공백 포함 34자로 제한)<br/> **줄바꿈: 최대1개** <br/>- 캐러셀 피드형(FC)은 사용불가  |
 | | attachment | - | - | json | N | 캐러셀 아이템 이미지, 버튼 정보 |
 | | - | button | - | array | N | 버튼 목록 |
 | | - | - | name | text(8) | - | 버튼 제목 |
