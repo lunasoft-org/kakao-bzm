@@ -1,4 +1,4 @@
-# 카카오 비즈메시지 친구톡 API v1.2.0
+# 카카오 비즈메시지 친구톡 API v1.3.0
 
 1. [개요](#1-개요)
 2. [용어 정의](#2-용어-정의)
@@ -12,6 +12,7 @@
 
 | 일시       | 변경 내역                                                                                                                                                                                                                    |
 |------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 2026.10.06 | 카탈로그형 메시지 타입 (FG) 추가                                                                                                                                                                                             |
 | 2026.01.05 | 캐러셀 리스트 메시지 줄바꿈 무제한 => 최대 10개                                                                                                                                                                              |
 | 2025.12.   | 브랜드 메시지로 변경 <br> - 캐러셀 최대갯수 10개 -> 6개 <br> - 버튼 링크 최대길이 1000자 -> 500자 <br> - 버튼제목 텍스트, 이미지 최대 14글자 그 외 최대 8글자 로 변경                                                        |
 | 2024.07.   | - 캐러셀 인트로 정보(carousel.head) 추가<br/>- FP(프리미엄 동영상) 쿠폰 사용 가능                                                                                                                                            |
@@ -82,6 +83,7 @@
 | adult              | text(1)    | N    | 성인용 메시지 여부 <br/>(성인용 메시지 여부 Y/N, 기본값 N)<br/>                                                                                                                                                                          | "adult":"Y"                                                                                                                                                                                                   |
 | attachment         | json       | N    | 메시지에 첨부할 내용<br/>(링크 버튼)                                                                                                                                                                                                     | "attachment":{"button":[{"name":"비즈메시지 소개","type":"WL","url_pc":"https://bizmessage.kakao.com/", "url_mobile":"https://bizmessage.kakao.com/"}]} **[<4.4 Attachment 에서 확인 가능>](#44-attachment)** |
 | header             | text(25)   | N    | [ 와이드 아이템 리스트 메시지 타입(FL) 사용시 필수, FP타입의 경우 옵션 ]                                                                                                                                                                 |                                                                                                                                                                                                               |
+| header_description | text(36)   | N    | CATALOG - 최대 36자 (줄바꿈: 최대 1회)                                                                                                                                                                                                   |                                                                                                                                                                                                               |
 | carousel           | json       | N    | [ 캐러셀 메시지 타입(FC, FA) 사용시 필수 ]                                                                                                                                                                                               | **[<4.5 Carousel>](#45-carousel)**                                                                                                                                                                            |
 
 ##### [Response]
@@ -229,48 +231,69 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 + 캐러셀 1개당 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송 가능
 + 광고 발송만 가능합니다.
 
+#### 4.3.9 카탈로그 타입
+
++ 카탈로그형 발송 가능
++ 최소 3개 부터 최대 7개 발송 가능
++ 아이템 개수가 홀수 개(3, 5, 7개)의 경우, 첫 번째 이미지를 카탈로그 첫 번째 이미지 업로드를 활용하여 첫 번째 이미지를 등록해야 합니다.<br>이후 나머지 이미지 업로드는 카탈로그 이미지 업로드를 활용하여 등록합니다.
++ 아이템 개수가 짝수 개(4, 6개)의 경우, 카탈로그 이미지 업로드를 활용하여 이미지를 등록합니다.
++ 광고 발송만 가능합니다.
+
 ### 4.4 Attachment
 친구톡은 **[<4.2 메시지 전송 요청>](#42-메시지-전송-요청)**의 요청 필드 중 attachment 값에 링크 버튼과 이미지를 첨부하여 발송할 수 있다.<br/>
 **버튼은 목록으로(Array) 최대 5개까지** 추가하여 발송할 수 있다.<br/>
 
 ##### [Parameter]
 
-| 키       | -              | -              | 타입      | 필수 | 설명                                                                                  |
-|----------|----------------|----------------|-----------|------|---------------------------------------------------------------------------------------|
-| button   |                |                | array     | -    | 버튼 목록                                                                             |
-|          | name           |                | text      | Y    | 버튼 제목 <br/> 텍스트, 이미지 최대 14글자<br> 그 외 최대 8글자                       |
-|          | type           |                | text(2)   | Y    | 버튼 타입 **[<4.4.1 버튼 타입에서 확인 가능>](#441-버튼-타입별-속성)**                |
-|          | scheme_android |                | text(500) | -    | mobile android 환경에서 버튼 클릭 시 실행할<br/>application custom scheme             |
-|          | scheme_ios     |                | text(500) | -    | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme                 |
-|          | url_mobile     |                | text(500) | -    | mobile 환경에서 버튼 클릭 시 이동할 url                                               |
-|          | url_pc         |                | text(500) | -    | pc 환경에서 버튼 클릭 시 이동할 url                                                   |
-| image    |                |                | json      | N    | 이미지                                                                                |
-|          | img_url        |                | text      | Y    | 노출할 이미지                                                                         |
-|          | img_link       |                | text      | N    | 이미지 클릭시 이동할 url<br/>미설정시 카카오톡 내 이미지 뷰어 사용                    |
-| item     |                |                | json      | N    | 와이드 아이템 리스트 전용                                                             |
-|          | list           |                | array     | Y    | 와이드 아이템 리스트 (최소:3, 최대: 4)                                                |
-|          |                | title          | text      | Y    | 아이템 제목                                                                           |
-|          |                | img_url        | text(500) | Y    | 아이템 이미지 URL                                                                     |
-|          |                | scheme_android | text(500) | N    | mobile android 환경에서 이미지 클릭 시 실행할<br/>application custom scheme           |
-|          |                | scheme_ios     | text(500) | N    | mobile ios 환경에서 이미지 클릭 시 실행할<br/>application custom scheme               |
-|          |                | url_mobile     | text(500) | Y    | mobile 환경에서 이미지 클릭 시 이동할 url                                             |
-|          |                | url_pc         | text(500) | N    | pc 환경에서 이미지 클릭 시 이동할 url                                                 |
-| coupon   |                |                | json      | N    | 메세지 최하단에 쿠폰 추가                                                             |
-|          | title          |                | text      | Y    | 쿠폰 상세 설명 <br> FT, FI - 12자 / FW, FL - 18자 제한 <br/> 줄바꿈 불가              |
-|          | description    |                | text      | Y    | 쿠폰 상세 설명 (FW, FL, FP - 18자 제한 / 나머지 - 12자 제한)                          |
-|          | url_pc         |                | text(500) | -    | pc 환경에서 쿠폰 클릭 시 이동할 url                                                   |
-|          | url_mobile     |                | text(500) | -    | mobile 환경에서 쿠폰 클릭 시 이동할 url                                               |
-|          | scheme_android |                | text(500) | -    | mobile android 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme             |
-|          | scheme_ios     |                | text(500) | -    | mobile ios 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme                 |
-| commerce |                |                | json      | N    | 커머스                                                                                |
-|          | title          |                | text      | Y    | 상품제목 (최대 30자)                                                                  |
-|          | regular_price  |                | number    | Y    | 정상가격 (0 ~ 99,999,999)                                                             |
-|          | discount_price |                | number    | N    | 할인가격  (0 ~ 99,999,999)                                                            |
-|          | discount_rate  |                | number    | N    | 할인율  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 100)           |
-|          | discount_fixed |                | number    | N    | 정액할인가격  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 999,999) |
-| video    |                |                | json      | N    | 비디오                                                                                |
-|          | video_url      |                | text      | Y    | 카카오TV 동영상 URL                                                                   |
-|          | thumbnail_url  |                | text      | N    | 동영상 썸네일용 이미지 URL, 없는 경우 동영상 기본썸네일 사용                          |
+| 키       | -              | -                   | 타입       | 필수 | 설명                                                                                                                         |
+|----------|----------------|---------------------|------------|------|------------------------------------------------------------------------------------------------------------------------------|
+| button   |                |                     | array      | -    | 버튼 목록                                                                                                                    |
+|          | name           |                     | text       | Y    | 버튼 제목 <br/> 텍스트, 이미지 최대 14글자<br> 그 외 최대 8글자                                                              |
+|          | type           |                     | text(2)    | Y    | 버튼 타입 **[<4.4.1 버튼 타입에서 확인 가능>](#441-버튼-타입별-속성)**                                                       |
+|          | scheme_android |                     | text(500)  | -    | mobile android 환경에서 버튼 클릭 시 실행할<br/>application custom scheme                                                    |
+|          | scheme_ios     |                     | text(500)  | -    | mobile ios 환경에서 버튼 클릭 시 실행할<br/>application custom scheme                                                        |
+|          | url_mobile     |                     | text(500)  | -    | mobile 환경에서 버튼 클릭 시 이동할 url                                                                                      |
+|          | url_pc         |                     | text(500)  | -    | pc 환경에서 버튼 클릭 시 이동할 url                                                                                          |
+| image    |                |                     | json       | N    | 이미지                                                                                                                       |
+|          | img_url        |                     | text       | Y    | 노출할 이미지                                                                                                                |
+|          | img_link       |                     | text       | N    | 이미지 클릭시 이동할 url<br/>미설정시 카카오톡 내 이미지 뷰어 사용                                                           |
+| item     |                |                     | json       | N    | 와이드 아이템 리스트 전용                                                                                                    |
+|          | list           |                     | array      | Y    | 와이드 아이템 리스트 (최소:3, 최대: 4)                                                                                       |
+|          |                | title               | text       | Y    | 아이템 제목                                                                                                                  |
+|          |                | img_url             | text(500)  | Y    | 아이템 이미지 URL                                                                                                            |
+|          |                | scheme_android      | text(500)  | N    | mobile android 환경에서 이미지 클릭 시 실행할<br/>application custom scheme                                                  |
+|          |                | scheme_ios          | text(500)  | N    | mobile ios 환경에서 이미지 클릭 시 실행할<br/>application custom scheme                                                      |
+|          |                | url_mobile          | text(500)  | Y    | mobile 환경에서 이미지 클릭 시 이동할 url                                                                                    |
+|          |                | url_pc              | text(500)  | N    | pc 환경에서 이미지 클릭 시 이동할 url                                                                                        |
+| coupon   |                |                     | json       | N    | 메세지 최하단에 쿠폰 추가                                                                                                    |
+|          | title          |                     | text       | Y    | 쿠폰 상세 설명 <br> FT, FI - 12자 / FW, FL - 18자 제한 <br/> 줄바꿈 불가                                                     |
+|          | description    |                     | text       | Y    | 쿠폰 상세 설명 (FW, FL, FP - 18자 제한 / 나머지 - 12자 제한)                                                                 |
+|          | url_pc         |                     | text(500)  | -    | pc 환경에서 쿠폰 클릭 시 이동할 url                                                                                          |
+|          | url_mobile     |                     | text(500)  | -    | mobile 환경에서 쿠폰 클릭 시 이동할 url                                                                                      |
+|          | scheme_android |                     | text(500)  | -    | mobile android 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme                                                    |
+|          | scheme_ios     |                     | text(500)  | -    | mobile ios 환경에서 쿠폰 클릭 시 실행할<br/>application custom scheme                                                        |
+| commerce |                |                     | json       | N    | 커머스                                                                                                                       |
+|          | title          |                     | text       | Y    | 상품제목 (최대 30자)                                                                                                         |
+|          | regular_price  |                     | number     | Y    | 정상가격 (0 ~ 99,999,999)                                                                                                    |
+|          | discount_price |                     | number     | N    | 할인가격  (0 ~ 99,999,999)                                                                                                   |
+|          | discount_rate  |                     | number     | N    | 할인율  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 100)                                                  |
+|          | discount_fixed |                     | number     | N    | 정액할인가격  <br/> 할인가격 존재시 할인율, 정액할인가격 중 하나는 필수 (0 ~ 999,999)                                        |
+| video    |                |                     | json       | N    | 비디오                                                                                                                       |
+|          | video_url      |                     | text       | Y    | 카카오TV 동영상 URL                                                                                                          |
+|          | thumbnail_url  |                     | text       | N    | 동영상 썸네일용 이미지 URL, 없는 경우 동영상 기본썸네일 사용                                                                 |
+| catalog  |                |                     | json       | N    | 카탈로그                                                                                                                     |
+|          | list           |                     | array      | Y    | 카탈로그 아이템 목록 (최소 3개, 최대 7개)                                                                                    |
+|          |                | type                | text       | Y    | **[<4.4.3 카탈로그 아이템 타입>](#443-카탈로그-아이템-타입)** 참고<br/>타입별 필수 파라미터를 모두 입력해야 메시지 발송 가능 |
+|          |                | img_url             | text       | Y    | 이미지 업로드 API로 등록한 아이템 이미지 URL                                                                                 |
+|          |                | img_link            | text(1000) | Y    | 이미지 클릭 시 이동할 URL                                                                                                    |
+|          |                | title               | text(20)   | Y    | 아이템 제목 (줄바꿈: 불가)                                                                                                   |
+|          |                | description         | text(22)   | N    | 아이템 설명 (줄바꿈: 불가)                                                                                                   |
+|          |                | regular_price       | number     | -    | 정상 가격 (0 ~ 99,999,999)                                                                                                   |
+|          |                | discount_price      | number     | N    | 할인 후 가격 (0 ~ 99,999,999)                                                                                                |
+|          |                | discount_rate       | number     | N    | 할인율 (1 ~ 100)                                                                                                             |
+|          |                | discount_fixed      | number     | N    | 정액 할인 가격 (0 ~ 999,999)                                                                                                 |
+|          |                | regular_price_name  | text(4)    | N    | 정상 가격 명                                                                                                                 |
+|          |                | discount_price_name | text(5)    | N    | 할인 후 가격 명                                                                                                              |
 
 ##### [Example]
 
@@ -317,6 +340,15 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 + url_pc, url_mobile, scheme_android, scheme_ios의 경우 필수값이 두가지 케이스로 구분됨
     + 기본 - url_mobile 필수값 나머지 옵션값
     + 채널 쿠폰 URL(포멧: alimtalk=coupon://) 사용 - scheme_android 혹은 scheme_ios 둘 중 하나 필수값 나머지 옵션값
+
+#### 4.4.3 카탈로그 아이템 타입
+
+| 버튼타입          | 설명                                                                           | 사용 가능 파라미터                                                                                                                     | 필수                                                      |
+|-------------------|--------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| COMMERCE_DISCOUNT | 상품 할인율 강조<br/>할인 후 가격 존재시 할인율, 정액 할인 가격 중 하나는 필수 | type<br/>img_url<br/>img_link<br/>title<br/>regular_price<br/>discount_price<br/>discount_rate<br/>discount_fixed                      | type<br/>img_url<br/>img_link<br/>title<br/>regular_price |
+| COMMERCE_PRICE    | 상품가격 강조<br/>할인 후 가격과 할인 가격명은 함께 있거나 없어야 함           | type<br/>img_url<br/>img_link<br/>title<br/>           regular_price<br/>discount_price<br/>regular_price_name<br/>discount_price_name | type<br/>img_url<br/>img_link<br/>title<br/>regular_price |
+| CONTENT           | 콘텐츠                                                                         | type<br/>img_url<br/>img_link<br/>title<br/>description                                                                                | type<br/>img_url<br/>img_link<br/>title                   |
+
 
 ### 4.5 Carousel
 캐러셀은 **[<4.2 메시지 전송 요청>](#42-메시지-전송-요청)**의 요청 필드 중 carousel 값에 아이템 리스트와 더보기를 설정하여 발송할 수 있다<br/>
@@ -370,7 +402,7 @@ $ curl  -H "Accept: application/json" -H "Content-type: application/json" -X POS
 + 텍스트 메시지 + 링크 버튼 발송이 가능합니다.
 + 텍스트 문구는 1000자로 제한됩니다.
 + 버튼은 최대 5개까지 등록하여 발송할 수 있습니다.
-<img src="/Images/Friendtalk/친구톡_텍스트.png" alt="친구톡 스트" style="zoom:50%;" />
+<br/><img src="/Images/Friendtalk/친구톡_텍스트.png" alt="친구톡 스트" style="zoom:50%;" />
 
 ```
 $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send
@@ -415,7 +447,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 + 텍스트 문구는 400자로 제한됩니다.
 + 버튼은 최대 5개까지 등록하여 발송할 수 있습니다.
 + 반드시 카카오 비즈메시지 업로드 API를 통해 업로드 한 이미지를 발송해야 합니다.
-<img src="/Images/Friendtalk/친구톡_이미지.png" alt="친구톡 이미지" style="zoom:50%;" />
+<br/><img src="/Images/Friendtalk/친구톡_이미지.png" alt="친구톡 이미지" style="zoom:50%;" />
 
 ```
 $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
@@ -463,7 +495,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 + 텍스트 메시지 + 링크 버튼(최대 2개) + 이미지 발송이 가능합니다.
 + 텍스트 문구는 76자로 제한됩니다.
 + 반드시 카카오 비즈메시지 업로드 API를 통해 업로드 한 와이드 이미지를 발송해야 합니다.
-<img src="/Images/Friendtalk/친구톡_와이드이미지.png" alt="친구톡 와이드 이미지" style="zoom:50%;" />
+<br/><img src="/Images/Friendtalk/친구톡_와이드이미지.png" alt="친구톡 와이드 이미지" style="zoom:50%;" />
 
 ```
 $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
@@ -502,7 +534,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 + 버튼은 최대 2개까지 가능하며 가로 정렬되어 발송 됩니다.
 + 반드시 카카오 비즈메시지 업로드 API를 통해 업로드 한 와이드 아이템 리스트 이미지를 발송해야 합니다.
 + 광고 발송만 가능합니다.
-<img src="/Images/Friendtalk/친구톡_와이드아이템리스트.png" alt="친구톡 와이드 아이템 리스트" style="zoom:50%;" />
+<br/><img src="/Images/Friendtalk/친구톡_와이드아이템리스트.png" alt="친구톡 와이드 아이템 리스트" style="zoom:50%;" />
 
 ```
 $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
@@ -566,7 +598,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 + 캐러셀 1개당 제목(헤더) + 텍스트 문구 + 링크 버튼(2개/가로배열) + 이미지 발송 가능합니다.
 + 반드시 카카오 비즈메시지 업로드 API를 통해 업로드 한 캐러셀 이미지를 발송해야 합니다.
 + 광고 발송만 가능합니다.
-<img src="/Images/Friendtalk/친구톡_캐러셀.png" alt="친구톡 캐러셀" style="zoom:50%;" />
+<br/><img src="/Images/Friendtalk/친구톡_캐러셀.png" alt="친구톡 캐러셀" style="zoom:50%;" />
 
 ```
 $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
@@ -632,7 +664,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 + 부가 정보는 34자로 제한됩니다.
 + 버튼은 최소 1개 이상 포함되어야 하며, 최대 2개까지 포함 가능하며 가로 정렬되어 발송 됩니다.
 + 캐러셀 1개당 제목(헤더) + 텍스트 문구 + 링크 버튼(2개/가로배열) + 이미지 발송 가능합니다.
-<img src="/Images/Friendtalk/친구톡_커머스.png" alt="친구톡 커머스" style="zoom:50%;" />
+<br/><img src="/Images/Friendtalk/친구톡_커머스.png" alt="친구톡 커머스" style="zoom:50%;" />
 
 ```
 $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
@@ -677,7 +709,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 + 헤더는 20자, 텍스트는 76자로 제한됩니다.
 + 헤더와 텍스트는 옵셔널한 값으로 없어도 발송 가능합니다.
 + 버튼은 1개까지 발송가능합니다.
-<img src="/Images/Friendtalk/친구톡_프리미엄_동영상.png" alt="친구톡 프리미엄 동영상" style="zoom:50%;" />
+<br/><img src="/Images/Friendtalk/친구톡_프리미엄_동영상.png" alt="친구톡 프리미엄 동영상" style="zoom:50%;" />
 
 ```
 $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
@@ -717,7 +749,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 + 각 캐러셀마다 버튼은 1개 필수이며 최대 2개까지 지원합니다.
 + 캐러셀 1개당 상품 제목 + 가격정보 + 부가정보 + 링크 버튼(2개/가로배열) + 이미지 발송 가능합니다.
 + 광고 발송만 가능합니다.
-<img src="/Images/Friendtalk/친구톡_캐러셀_커머스.png" alt="친구톡 캐러셀 커머스" style="zoom:50%;" />
+<br/><img src="/Images/Friendtalk/친구톡_캐러셀_커머스.png" alt="친구톡 캐러셀 커머스" style="zoom:50%;" />
 
 ```
 $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
@@ -792,6 +824,87 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
 ```
 
 ### 5.9 쿠폰 발송 요청
++ 카탈로그형 발송 가능
++ 최소 3개 부터 최대 7개 발송 가능
++ 아이템 개수가 홀수 개(3, 5, 7개)의 경우, 첫 번째 이미지를 카탈로그 첫 번째 이미지 업로드를 활용하여 첫 번째 이미지를 등록해야 합니다.<br>이후 나머지 이미지 업로드는 카탈로그 이미지 업로드를 활용하여 등록합니다.
++ 아이템 개수가 짝수 개(4, 6개)의 경우, 카탈로그 이미지 업로드를 활용하여 이미지를 등록합니다.
++ 광고 발송만 가능합니다.
+<br><img src="/Images/Friendtalk/친구톡_카탈로그.png" alt="친구톡" style="zoom:50%;" />
+
+```
+$ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/send 
+-H 'Accept: application/json'
+-H 'Content-type: application/json'
+-H 'agentKey: `사전에 블룸에이아이 운영 담당자를 통해 전달 받은 AgentKey`'
+-d '
+{
+    "ad_flag": "Y",
+    "message_type": "FG",
+    "message_key": "0000000001",
+    "sender_key": "b564fa480f3b5c979a30531b9e6035cd5a258e56",
+    "country_code": "82",
+    "recipient_number": "01012345678",
+    "header": "헤더",
+    "header_description": "헤더 디스크립션",
+    "attachment": {
+        "button": [
+            {
+                "name": "전체 보기",
+                "type": "WL",
+                "url_mobile": "https://example.com",
+                "url_pc": "https://example.com"
+            }
+        ],
+        "coupon": {
+            "title": "1000원 할인 쿠폰",
+            "description": "상품 구매 시 사용",
+            "url_mobile": "https://example.com"
+        },
+        "catalog": {
+            "list": [
+                {
+                    "type": "COMMERCE_DISCOUNT",
+                    "img_url": "https://mud-kage.kakao.com/dn/V7NUZ/dJMb998TOnf/gFB509keg8WWKo1zCB3Kfk/img_l.jpg",
+                    "img_link": "https://www.yahoo.co.jp",
+                    "title": "여름 반팔 티셔츠",
+                    "regular_price": 29000,
+                    "discount_price": 20300,
+                    "discount_rate": 30,
+                    "discount_fixed": 8700
+                },
+                {
+                    "type": "COMMERCE_DISCOUNT",
+                    "img_url": "https://mud-kage.kakao.com/dn/bjcYLg/dJMb998TOnc/ZyEXNYNYyMih5FxcQ0uiA1/img_l.jpg",
+                    "img_link": "https://www.google.com",
+                    "title": "린넨 셔츠",
+                    "regular_price": 50000,
+                    "discount_price": 45000,
+                    "discount_rate": 10
+                },
+                {
+                    "type": "COMMERCE_PRICE",
+                    "img_url": "https://mud-kage.kakao.com/dn/cJvobh/dJMb998TOnd/TEUsaVZqKBtzDyyTrWsCr1/img_l.jpg",
+                    "img_link": "https://www.naver.com",
+                    "title": "데님 팬츠",
+                    "regular_price": 59000,
+                    "discount_price": 49000,
+                    "regular_price_name": "정상가",
+                    "discount_price_name": "특가"
+                },
+                {
+                    "type": "CONTENT",
+                    "img_url": "https://mud-kage.kakao.com/dn/7nJIA/dJMb998TOne/anciLOAfipU2U51UwPQqf1/img_l.jpg",
+                    "img_link": "https://www.daum.net",
+                    "title": "가을 신상 미리보기",
+                    "description": "새 시즌 컬렉션을 확인하세요"
+                }
+            ]
+        }
+    }
+}'
+```
+
+### 5.10 쿠폰 발송 요청
 + 쿠폰형은 모든 메세지 타입이 사용 가능합니다.
 + 세로형 버튼을 사용하는 FT, FI의 경우 쿠폰을 적용할 경우 최대 버튼 4개까지만 사용 가능합니다.
 + title의 경우 5가지 형식으로 제한 됩니다.
@@ -802,7 +915,7 @@ $ curl -X POST https://test-kakao-bizmessage.lunasoft.co.kr/api/v3/friendtalk/se
     + "${7자 이내} UP 쿠폰"
 + description의 경우 메시지 타입 FW(와이드 이미지), FL(와이드 아이템 리스트), FP(프리미엄 동영상) - 18자로 제한/ 나머지 - 12자로 제한 제한됩니다.
 
-#### 5.9.1 이미지 친구톡 + 쿠폰 발송 요청
+#### 5.10.1 이미지 친구톡 + 쿠폰 발송 요청
 + 텍스트 메시지 + 링크 버튼 + 이미지 + 쿠폰 발송이 가능합니다.
 + 텍스트 문구는 400자로 제한됩니다.
 + 버튼은 최대 4개까지 등록하여 발송할 수 있습니다.
