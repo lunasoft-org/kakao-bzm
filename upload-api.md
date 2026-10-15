@@ -330,7 +330,7 @@
 > + 이미지 비율: 세로 ÷ 가로 = 1
 > + 파일 형식 및 용량 제한: jpg, png / 최대 5MB
 
-**POST** /v1/image/friendtalk/carouselCommerce
+**POST** /v1/image/friendtalk/catalog
 
 ##### [Header]
 | 키       | 타입 | 필수 | 설명                                                        |
